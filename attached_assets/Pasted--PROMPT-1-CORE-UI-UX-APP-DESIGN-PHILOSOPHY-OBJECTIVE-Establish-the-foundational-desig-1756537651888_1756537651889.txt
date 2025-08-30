@@ -1,0 +1,26 @@
+// PROMPT 1: CORE UI/UX & APP DESIGN PHILOSOPHY
+
+// OBJECTIVE
+// Establish the foundational design philosophy for the "Lunar Vault" Python web app. This prompt defines the core aesthetic, interaction model, and overall user experience that will govern the entire application.
+
+// CORE CONCEPT: "THE LIVING INTERFACE"
+// The app must embody a "Living Interface" philosophy. This means the UI is not a static display but a dynamic, intelligent entity that feels alive and responsive to the flow of data. Every element should visualize data through constant, meaningful motion, creating a futuristic and intuitive experience that enhances user engagement and makes interactions more usable.
+
+// KEY DESIGN DIRECTIVES
+// 1. AESTHETIC: FUTURISTIC & IMMERSIVE
+// - The overall aesthetic must be futuristic, immersive, and minimalist.[1, 2]
+// - The design will combine layered **glassmorphism** with **holographic** data elements to create a modern, clean, and intelligent feel.
+
+// 2. UI SURFACE STYLE: DEPTH & FOCUS
+// - Main modules and charts should be presented on frameless, translucent glassmorphism panels.
+// - All primary indicators and KPI readouts (both text and icons) must be **backgroundless**, appearing as floating holographic elements that live directly on the main interface. This is crucial for creating a sense of depth and focus on essential data.[3]
+
+// 3. USER EXPERIENCE LOGIC: "CLICK-TO-EXPLORE"
+// - The core UX principle is that every data point is an interactive gateway.
+// - Clicking any navigation icon, KPI, or chart element must trigger a fluid, seamless animation that transitions the user to a dedicated page for deeper analysis.
+// - The experience must feel exploratory and intuitive, encouraging users to drill down into their data without feeling like they are navigating a series of static, disconnected pages.
+
+// 4. THEMES: DUAL MODE FUNCTIONALITY
+// - The app must support both a **Dark Mode** (default) and a **Light Mode**.
+// - A user-friendly toggle must be easily accessible for switching between themes.
+// - Both themes must be designed for high contrast and readability, following accessibility best practices. Dark mode should use dark grays (e.g., #121212) instead of pure black to reduce eye strain.

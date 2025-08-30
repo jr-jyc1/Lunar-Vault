@@ -1,0 +1,35 @@
+// PROMPT 4: THE COMMAND CENTER DASHBOARD (HOMEPAGE)
+
+// OBJECTIVE
+// Design the main dashboard for "Lunar Vault," which serves as the central command center for the user's energy ecosystem. The layout must follow a strict information hierarchy and fully embody the "Living Interface" principles, with every element being dynamic, interactive, and visually futuristic.
+
+// NAVIGATION: A CORE FUTURISTIC ELEMENT
+// The primary navigation is a key interactive feature of the homepage, not just a static menu.
+// -   **Desktop (PC):** A persistent vertical holographic rail on the left, composed of interactive, **animated 3D icons** for each function (Dashboard, Solar, Home, Grid, Savings, Settings). The icons should have subtle idle animations (e.g., a slow, gentle rotation) and respond to hover with a soft glow or highlight. On click, they should trigger a more pronounced animation as the app transitions to the new page.
+// -   **Mobile (Phone):** A thumb-friendly bottom tab bar featuring the same interactive, animated 3D icons with similar idle and active animation states.
+
+// DASHBOARD LAYOUT & HIERARCHY (STRICT ORDER OF APPEARANCE)
+// The dashboard modules must be arranged in the following top-to-bottom order to prioritize real-time data and user awareness.
+
+// 1. HOLOGRAPHIC REAL-TIME ENERGY FLOW (TOP PRIORITY)
+// -   **Positioning:** This is the primary and most prominent element, positioned at the very top of the screen.
+// -   **Animation Logic:** The visualization must be a highly dynamic 3D representation of the user's energy ecosystem. 
+//     -   Energy flows should be visualized as **animated particles** or a fluid-like substance moving between sources and destinations.
+//     -   The speed and density of the particles must directly correspond to the amount of power (kW) being transferred.
+//     -   It must include **reverse animation** to clearly visualize energy being exported back to the grid or used to charge the battery, with particles flowing in the opposite direction.
+// -   **Layout:** The animation must follow a clear visual hierarchy: **Solar Panels (Top), Power Grid (Left), Home (Center), Battery (Right)**.
+
+// 2. 24-HOUR ENERGY TRENDS CHART
+// -   **Positioning:** Placed directly below the Real-Time Energy Flow.
+// -   **Design:** A redesigned, interactive chart presented on a frameless, translucent glassmorphism panel. It should show a consolidated view of energy production (e.g., as an area graph) vs. consumption (e.g., as a line graph) over the last 24 hours.
+// -   **Interactivity:** The chart must be scrubbable, allowing the user to tap and drag to see precise data points for any time within the 24-hour period.
+
+// 3. SMART RECOMMENDATIONS
+// -   **Positioning:** Placed below the 24-Hour Energy Trends Chart.
+// -   **Design:** A vertical glassmorphism panel that displays a 24-hour forecast using **animated 3D weather icons** (e.g., a sun with rotating rays, a cloud with subtle movement).
+// -   **Content:** The module must provide 2-3 actionable, personalized energy-saving tips based on the forecast (e.g., "Sunny afternoon ahead. Schedule your EV charge for 3 PM to use 100% solar.").
+
+// 4. FLOATING KPI INDICATORS
+// -   **Positioning:** These should float in a designated area of the interface (e.g., layered over the bottom corners of the 24-Hour Trend Chart) and must not be contained within cards or boxes.
+// -   **Design:** Key metrics for 'Solar Production', 'Home Consumption', 'Grid Status', and 'Today's Savings' must be presented as **backgroundless, holographic text** paired with their unique **animated 3D icons**.
+// -   **Interactivity:** Each floating indicator is a clickable gateway. Clicking one should trigger a fluid transition to its corresponding detailed analytics page.

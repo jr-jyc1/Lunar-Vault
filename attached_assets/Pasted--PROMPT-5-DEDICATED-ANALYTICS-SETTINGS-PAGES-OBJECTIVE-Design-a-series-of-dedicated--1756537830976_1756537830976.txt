@@ -1,0 +1,39 @@
+// PROMPT 5: DEDICATED ANALYTICS & SETTINGS PAGES
+
+// OBJECTIVE
+// Design a series of dedicated, full-screen pages that users can access by clicking on navigation icons or data indicators from the main dashboard. Each page must provide a deep dive into its specific domain, presenting detailed data visualizations and controls. The design must maintain the app's futuristic "Living Interface" aesthetic and provide a seamless, fluid user experience.
+
+// GENERAL USER FLOW & TRANSITION LOGIC
+// 1. ENTRY POINTS
+// - Users will navigate to these pages by clicking either the main navigation icons (e.g., "Solar," "Home," "Settings") or the floating holographic KPI indicators on the dashboard (e.g., the "Solar Production" readout).
+
+// 2. TRANSITION ANIMATION: "TRANSFORMATION"
+// - The transition from the dashboard to a detailed page must be a fluid animation that reinforces the app's spatial logic.
+// - When a user clicks a KPI or navigation icon, that element should serve as the origin point for the transition. It should smoothly expand and transform into the header or primary chart of the new page, making the user feel like they are "zooming into" the data rather than loading a new screen.
+
+// GENERAL DESIGN PRINCIPLES FOR ALL PAGES
+// - **Aesthetic Consistency:** All pages must strictly adhere to the established "Living Interface" design language, including the dynamic celestial background, glassmorphism panels for content, and holographic elements.
+// - **Data Clarity:** The primary goal of these pages is to present complex data in a clear, digestible, and actionable format. Prioritize readability and intuitive data storytelling.
+// - **Responsiveness:** All page layouts must be fully responsive, providing an optimized experience on both desktop and mobile devices. On mobile, layouts should adapt to a single-column, vertically scrollable format.[1, 2]
+
+// 1. SOLAR PRODUCTION ANALYTICS PAGE
+// - **User Flow:** Opens when the user clicks the "Solar" navigation icon or the "Solar Production" floating KPI.
+// - **Content & Features:**
+//     - A large, interactive version of the redesigned 24-hour energy trend chart, serving as the page's centerpiece.
+//     - **Timeframe Filters:** Allow users to filter the chart data by different time ranges (Day, Week, Month, Year, Lifetime).[3]
+//     - **Key Metrics:** Display detailed metrics such as total energy generated, peak production times, and panel efficiency percentages.
+//     - **Comparative Analysis:** Include features to compare performance against previous periods (e.g., this month vs. last month).
+//     - **Data Export:** Provide an option to export the data in CSV or PDF format for offline analysis.
+
+// 2. HOME CONSUMPTION INSIGHTS PAGE
+// - **User Flow:** Opens when the user clicks the "Home" navigation icon or the "Home Consumption" floating KPI.
+// - **Content & Features:**
+//     - A detailed analytics page featuring the redesigned trend chart to visualize home energy usage patterns.
+//     - **Appliance-Level Breakdown:** If possible, provide insights into which specific appliances are consuming the most energy.[4]
+//     - **Historical Comparisons:** Allow users to compare their current consumption with historical data to identify changes in habits.
+//     - **Peak Usage Alerts:** Highlight periods of unusually high energy consumption.
+
+// 3. GRID CONNECTION ANALYSIS PAGE
+// - **User Flow:** Opens when the user clicks the "Grid" navigation icon or the "Grid Status" floating KPI.
+// - **Content & Features:**
+//     - An analytics page using the redesigned trend chart to show detailed grid import and
