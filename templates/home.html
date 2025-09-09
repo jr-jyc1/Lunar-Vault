@@ -3,410 +3,53 @@
 {% block title %}Home Consumption - Lunar Vault{% endblock %}
 
 {% block content %}
-<div class="analytics-container">
-    <!-- Page Header -->
+<div class="page-container">
     <div class="page-header">
-        <div class="header-navigation">
-            <button onclick="history.back()" class="back-btn glass-panel">
-                <i class="fas fa-arrow-left"></i>
-                <span>Back to Dashboard</span>
-            </button>
+        <h1>Home Consumption</h1>
+        <p>Detailed analysis of your home energy usage.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="card stat-card">
+            <div class="stat-label">Current Usage</div>
+            <div class="stat-value" id="current-usage">0 kW</div>
         </div>
-        <div class="header-content">
-            <h1 class="page-title">
-                <i class="fas fa-home animate-glow home-icon"></i>
-                Home Consumption Insights
-            </h1>
-            <p class="page-subtitle">Detailed analysis of your home energy usage patterns</p>
+        <div class="card stat-card">
+            <div class="stat-label">Today's Total</div>
+            <div class="stat-value" id="daily-consumption">0 kWh</div>
         </div>
-        <div class="header-stats">
-            <div class="stat-item holographic">
-                <div class="stat-value" id="current-usage">0 kW</div>
-                <div class="stat-label">Current Usage</div>
-            </div>
-            <div class="stat-item holographic">
-                <div class="stat-value" id="daily-consumption">0 kWh</div>
-                <div class="stat-label">Today's Total</div>
-            </div>
-            <div class="stat-item holographic">
-                <div class="stat-value" id="efficiency-score">0%</div>
-                <div class="stat-label">Efficiency Score</div>
-            </div>
+        <div class="card stat-card">
+            <div class="stat-label">Efficiency Score</div>
+            <div class="stat-value" id="efficiency-score">0%</div>
         </div>
     </div>
-    
-    <!-- Current Usage Breakdown -->
-    <section class="current-usage-section">
-        <div class="glass-panel">
-            <div class="section-header">
-                <h2 class="chart-title">
-                    <i class="fas fa-tachometer-alt tachometer-icon"></i>
-                    Real-Time Usage Breakdown
-                </h2>
-                <div class="usage-total">
-                    <span id="total-current-usage" class="usage-value">0.0 kW</span>
-                    <span class="usage-label">Total Current Draw</span>
-                </div>
-            </div>
-            <div class="appliances-grid" id="appliances-grid">
-                <!-- Appliance usage will be populated by JavaScript -->
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Consumption Trends</h2>
+            <div class="chart-filters">
+                <button class="filter-btn active" data-period="day">24H</button>
+                <button class="filter-btn" data-period="week">7D</button>
+                <button class="filter-btn" data-period="month">30D</button>
             </div>
         </div>
-    </section>
-    
-    <!-- Consumption Trends Chart -->
-    <section class="main-chart-section">
-        <div class="glass-panel chart-container">
-            <div class="chart-header">
-                <h2 class="chart-title">
-                    <i class="fas fa-chart-line chart-line-icon"></i>
-                    Consumption Trends
-                </h2>
-                <div class="chart-controls">
-                    <div class="chart-filters">
-                        <button class="filter-btn active" data-period="day">24 Hours</button>
-                        <button class="filter-btn" data-period="week">7 Days</button>
-                        <button class="filter-btn" data-period="month">30 Days</button>
-                        <button class="filter-btn" data-period="year">12 Months</button>
-                    </div>
-                    <div class="chart-actions">
-                        <button class="action-btn" onclick="exportConsumptionData()">
-                            <i class="fas fa-download"></i>
-                            Export Data
-                        </button>
-                        <button class="action-btn" onclick="generateUsageReport()">
-                            <i class="fas fa-file-pdf"></i>
-                            Usage Report
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-canvas-container">
-                <canvas id="consumption-chart"></canvas>
-            </div>
+        <div class="card-content">
+            <canvas id="consumption-chart" height="300"></canvas>
         </div>
-    </section>
-    
-    <!-- Appliance Breakdown -->
-    <section class="appliance-breakdown-section">
-        <div class="glass-panel chart-container">
-            <div class="chart-header">
-                <h2 class="chart-title">
-                    <i class="fas fa-chart-pie chart-pie-icon"></i>
-                    Energy Usage by Category
-                </h2>
-                <div class="breakdown-legend">
-                    <div class="legend-items">
-                        <span class="legend-item">
-                            <div class="legend-color legend-hvac"></div>
-                            HVAC (40%)
-                        </span>
-                        <span class="legend-item">
-                            <div class="legend-color legend-lighting"></div>
-                            Lighting (15%)
-                        </span>
-                        <span class="legend-item">
-                            <div class="legend-color legend-appliances"></div>
-                            Appliances (20%)
-                        </span>
-                        <span class="legend-item">
-                            <div class="legend-color legend-ev"></div>
-                            EV Charging (20%)
-                        </span>
-                        <span class="legend-item">
-                            <div class="legend-color legend-other"></div>
-                            Other (5%)
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="doughnut-chart-container">
-                <canvas id="consumption-breakdown-chart"></canvas>
-            </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Energy Usage by Category</h2>
         </div>
-    </section>
-    
-    <!-- Usage Patterns -->
-    <section class="patterns-section">
-        <div class="patterns-grid">
-            <!-- Peak Hours Analysis -->
-            <div class="pattern-card glass-panel">
-                <div class="pattern-header">
-                    <h3>Peak Usage Hours</h3>
-                    <i class="fas fa-clock clock-icon"></i>
-                </div>
-                <div class="pattern-content">
-                    <div class="peak-times">
-                        <div class="peak-time">
-                            <span class="time-label">Morning Peak</span>
-                            <span class="time-value">7:00 - 9:00 AM</span>
-                            <span class="time-usage">4.2 kW avg</span>
-                        </div>
-                        <div class="peak-time">
-                            <span class="time-label">Evening Peak</span>
-                            <span class="time-value">6:00 - 9:00 PM</span>
-                            <span class="time-usage">5.8 kW avg</span>
-                        </div>
-                        <div class="peak-time">
-                            <span class="time-label">Night Valley</span>
-                            <span class="time-value">11:00 PM - 5:00 AM</span>
-                            <span class="time-usage">1.2 kW avg</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Weekly Patterns -->
-            <div class="pattern-card glass-panel">
-                <div class="pattern-header">
-                    <h3>Weekly Usage Pattern</h3>
-                    <i class="fas fa-calendar-week calendar-icon"></i>
-                </div>
-                <div class="pattern-content">
-                    <div class="weekly-chart" id="weekly-usage-chart">
-                        <!-- Weekly chart will be populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Efficiency Metrics -->
-            <div class="pattern-card glass-panel">
-                <div class="pattern-header">
-                    <h3>Efficiency Metrics</h3>
-                    <i class="fas fa-leaf leaf-icon"></i>
-                </div>
-                <div class="pattern-content">
-                    <div class="efficiency-metrics">
-                        <div class="metric-item">
-                            <span class="metric-label">Energy Efficiency</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill metric-fill-energy metric-fill-85"></div>
-                            </div>
-                            <span class="metric-value">85%</span>
-                        </div>
-                        <div class="metric-item">
-                            <span class="metric-label">Peak Demand Reduction</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill metric-fill-peak metric-fill-72"></div>
-                            </div>
-                            <span class="metric-value">72%</span>
-                        </div>
-                        <div class="metric-item">
-                            <span class="metric-label">Load Shifting Success</span>
-                            <div class="metric-bar">
-                                <div class="metric-fill metric-fill-load metric-fill-68"></div>
-                            </div>
-                            <span class="metric-value">68%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="card-content">
+            <canvas id="consumption-breakdown-chart" height="300"></canvas>
         </div>
-    </section>
-    
-    <!-- Smart Recommendations -->
-    <section class="recommendations-section">
-        <div class="glass-panel">
-            <h2 class="chart-title">
-                <i class="fas fa-lightbulb animate-glow lightbulb-icon"></i>
-                Energy Saving Recommendations
-            </h2>
-            <div id="consumption-recommendations" class="recommendations-grid">
-                <!-- Recommendations will be populated by JavaScript -->
-            </div>
-        </div>
-    </section>
-    
-    <!-- Usage Alerts -->
-    <section class="alerts-section">
-        <div class="glass-panel">
-            <h2 class="chart-title">
-                <i class="fas fa-exclamation-triangle exclamation-icon"></i>
-                Usage Alerts & Insights
-            </h2>
-            <div id="usage-alerts" class="alerts-container">
-                <!-- Alerts will be populated by JavaScript -->
-            </div>
-        </div>
-    </section>
+    </div>
+
 </div>
+{% endblock %}
 
-
-<script>
-function exportConsumptionData() {
-    const csvContent = `Date,Time,HVAC (kW),Lighting (kW),Appliances (kW),EV Charging (kW),Other (kW),Total (kW)
-${new Date().toISOString().split('T')[0]},00:00,2.1,0.3,0.8,0.0,0.2,3.4
-${new Date().toISOString().split('T')[0]},06:00,3.8,1.2,1.1,0.0,0.3,6.4
-${new Date().toISOString().split('T')[0]},12:00,2.9,0.1,1.5,3.2,0.4,8.1
-${new Date().toISOString().split('T')[0]},18:00,4.2,1.8,2.1,0.0,0.5,8.6`;
-    
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'home_consumption_data.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-}
-
-function generateUsageReport() {
-    alert('Generating comprehensive usage report... This would create a detailed PDF with consumption patterns, efficiency metrics, and recommendations.');
-}
-
-// Initialize page content
-document.addEventListener('DOMContentLoaded', function() {
-    updateCurrentUsage();
-    generateWeeklyChart();
-    generateRecommendations();
-    generateUsageAlerts();
-    updateConsumptionMetrics();
-});
-
-function updateCurrentUsage() {
-    const appliances = [
-        { name: 'HVAC System', icon: 'fas fa-snowflake', usage: '3.2 kW', status: 'Cooling', color: '#ef4444' },
-        { name: 'Water Heater', icon: 'fas fa-fire', usage: '2.1 kW', status: 'Heating', color: '#f59e0b' },
-        { name: 'Refrigerator', icon: 'fas fa-cube', usage: '0.8 kW', status: 'Running', color: '#10b981' },
-        { name: 'Lighting', icon: 'fas fa-lightbulb', usage: '0.6 kW', status: 'Auto Mode', color: '#f59e0b' },
-        { name: 'EV Charger', icon: 'fas fa-car', usage: '0.0 kW', status: 'Idle', color: '#3b82f6' },
-        { name: 'Entertainment', icon: 'fas fa-tv', usage: '0.4 kW', status: 'Standby', color: '#8b5cf6' }
-    ];
-    
-    const container = document.getElementById('appliances-grid');
-    container.innerHTML = appliances.map(appliance => `
-        <div class="appliance-card">
-            <div class="appliance-header">
-                <span class="appliance-name">${appliance.name}</span>
-                <i class="${appliance.icon} appliance-icon appliance-color-${appliance.color.replace('#', '')}"></i>
-            </div>
-            <div class="appliance-usage appliance-color-${appliance.color.replace('#', '')}">${appliance.usage}</div>
-            <div class="appliance-status">
-                <div class="status-indicator appliance-bg-${appliance.color.replace('#', '')}"></div>
-                <span>${appliance.status}</span>
-            </div>
-        </div>
-    `).join('');
-    
-    // Update total usage
-    const totalUsage = appliances.reduce((sum, appliance) => {
-        const usage = parseFloat(appliance.usage.split(' ')[0]);
-        return sum + usage;
-    }, 0);
-    
-    document.getElementById('total-current-usage').textContent = `${totalUsage.toFixed(1)} kW`;
-}
-
-function generateWeeklyChart() {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const usage = [28.5, 26.8, 31.2, 29.7, 27.4, 33.1, 30.8];
-    const maxUsage = Math.max(...usage);
-    
-    const container = document.getElementById('weekly-usage-chart');
-    container.innerHTML = days.map((day, index) => `
-        <div class="day-usage">
-            <div class="day-name">${day}</div>
-            <div class="day-value">${usage[index]} kWh</div>
-            <div class="day-bar">
-                <div class="day-fill" data-width="${(usage[index] / maxUsage) * 100}"></div>
-            </div>
-        </div>
-    `).join('');
-
-    // Set widths programmatically to avoid inline styles
-    const fills = container.querySelectorAll('.day-fill');
-    fills.forEach(fill => {
-        const width = fill.getAttribute('data-width');
-        fill.style.width = width + '%';
-    });
-}
-
-function generateRecommendations() {
-    const recommendations = [
-        {
-            icon: 'fas fa-thermometer-half',
-            title: 'Optimize HVAC Schedule',
-            description: 'Your HVAC system runs during peak solar hours. Shift cooling to early morning and pre-cool your home using solar power.',
-            savings: 'Save $45/month',
-            effort: 'Easy'
-        },
-        {
-            icon: 'fas fa-clock',
-            title: 'Delay Water Heating',
-            description: 'Schedule water heater to run between 10 AM - 2 PM when solar production is highest.',
-            savings: 'Save $28/month',
-            effort: 'Easy'
-        },
-        {
-            icon: 'fas fa-car-battery',
-            title: 'Smart EV Charging',
-            description: 'Enable smart charging to automatically charge your EV during peak solar production hours.',
-            savings: 'Save $62/month',
-            effort: 'Moderate'
-        },
-        {
-            icon: 'fas fa-lightbulb',
-            title: 'LED Upgrade Opportunity',
-            description: 'Replace remaining incandescent bulbs with smart LEDs to reduce lighting consumption by 35%.',
-            savings: 'Save $18/month',
-            effort: 'Easy'
-        }
-    ];
-    
-    const container = document.getElementById('consumption-recommendations');
-    container.innerHTML = recommendations.map(rec => `
-        <div class="recommendation-card">
-            <div class="recommendation-header">
-                <i class="${rec.icon} recommendation-icon"></i>
-                <span class="recommendation-title">${rec.title}</span>
-            </div>
-            <div class="recommendation-description">${rec.description}</div>
-            <div class="recommendation-savings">
-                <span class="savings-amount">${rec.savings}</span>
-                <span class="effort-level">${rec.effort}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-function generateUsageAlerts() {
-    const alerts = [
-        {
-            icon: 'fas fa-exclamation-triangle',
-            title: 'High Evening Usage Detected',
-            message: 'Your consumption between 6-8 PM is 23% higher than average. Consider shifting some activities to off-peak hours.',
-            time: '2 hours ago'
-        },
-        {
-            icon: 'fas fa-snowflake',
-            title: 'HVAC Running Efficiency Alert',
-            message: 'Your air conditioning has been running 15% longer than optimal. Check air filters and consider a thermostat adjustment.',
-            time: '1 day ago'
-        },
-        {
-            icon: 'fas fa-info-circle',
-            title: 'Phantom Load Detection',
-            message: 'Standby power consumption has increased by 8% this week. Review connected devices and unplug unused electronics.',
-            time: '3 days ago'
-        }
-    ];
-    
-    const container = document.getElementById('usage-alerts');
-    container.innerHTML = alerts.map(alert => `
-        <div class="alert-item">
-            <i class="${alert.icon} alert-icon"></i>
-            <div class="alert-content">
-                <div class="alert-title">${alert.title}</div>
-                <div class="alert-message">${alert.message}</div>
-            </div>
-            <div class="alert-time">${alert.time}</div>
-        </div>
-    `).join('');
-}
-
-function updateConsumptionMetrics() {
-    document.getElementById('current-usage').textContent = '7.1 kW';
-    document.getElementById('daily-consumption').textContent = '29.8 kWh';
-    document.getElementById('efficiency-score').textContent = '85%';
-}
-</script>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}

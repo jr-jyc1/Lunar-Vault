@@ -4,9 +4,9 @@
 
 {% block content %}
 <div class="login-container">
-    <div class="login-card login-panel glass-panel animate-float">
+    <div class="login-card" id="login-panel">
         <div class="login-header">
-            <h1>Lunar Vault <span class="indicator"></span></h1>
+            <h1>Lunar Vault</h1>
             <p>Energy Management System</p>
         </div>
         <form method="POST" action="{{ url_for('login') }}" class="login-form">
@@ -19,18 +19,18 @@
                 <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required>
             </div>
             <button type="submit" class="btn-primary">
-                <i class="fas fa-arrow-right animate-pulse-3d"></i> Login
+                Login
             </button>
         </form>
         <div class="login-footer">
             <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Create one</a></p>
         </div>
     </div>
-     <!-- Register Form (Hidden by default) - inline style moved to CSS -->
-     <div id="register-panel" class="login-panel glass-panel animate-float">
+
+     <div class="login-card" id="register-panel">
         <div class="login-header">
-            <h1>Join Lunar Vault <span class="indicator"></span></h1>
-            <p>Create your energy command center</p>
+            <h1>Join Lunar Vault</h1>
+            <p>Create your energy command center.</p>
         </div>
         <form method="POST" action="{{ url_for('register') }}" class="login-form">
             <div class="form-group">
@@ -46,294 +46,16 @@
                 <input type="password" id="reg-password" name="password" class="form-input" placeholder="Create a password" required>
             </div>
             <button type="submit" class="btn-primary">
-                <i class="fas fa-user-plus animate-pulse-3d"></i> Create Account
+                Create Account
             </button>
         </form>
         <div class="login-footer">
-            <p>Already have an account? <a href="#" onclick="showLoginForm()" class="text-link">Sign in</a></p>
+            <p>Already have an account? <a href="#" onclick="showLoginForm()">Sign in</a></p>
         </div>
     </div>
 </div>
+{% endblock %}
 
-<style>
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: var(--bg-primary);
-    padding: 0 20px;
-}
-
-.login-card {
-    width: 100%;
-    max-width: 400px;
-    background: var(--glass-bg);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-.login-header {
-    text-align: center;
-    padding: 40px 20px 20px;
-    position: relative;
-}
-
-.login-header h1 {
-    font-size: 28px;
-    margin: 0 0 10px;
-    color: var(--text-primary);
-}
-
-.login-header p {
-    margin: 0;
-    color: var(--text-secondary);
-    font-size: 16px;
-}
-
-.indicator {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background: var(--accent-primary);
-    border-radius: 50%;
-    margin-left: 5px;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 0.7;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.login-form {
-    padding: 0 20px 40px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-primary);
-}
-
-.form-input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    font-size: 16px;
-    color: var(--text-primary);
-    background: var(--input-bg);
-    transition: all 0.3s ease;
-}
-
-.form-input:focus {
-    border-color: var(--accent-primary);
-    outline: none;
-    box-shadow: 0 0 5px var(--accent-primary);
-}
-
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: var(--accent-primary);
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.btn-primary i {
-    margin-right: 8px;
-}
-
-.btn-primary:hover {
-    background: var(--accent-secondary);
-}
-
-.login-footer {
-    text-align: center;
-    border-top: 1px solid var(--glass-border);
-    padding: 20px 0;
-}
-
-.login-footer p {
-    margin: 0;
-    color: var(--text-secondary);
-}
-
-.text-link {
-    color: var(--accent-primary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.text-link:hover {
-    color: var(--accent-secondary);
-    text-shadow: 0 0 10px var(--hologram-glow);
-}
-
-@media (max-width: 480px) {
-    .login-container {
-        padding: 15px;
-    }
-    
-    .login-card {
-        border-radius: 10px;
-    }
-    
-    .login-header h1 {
-        font-size: 24px;
-    }
-    
-    .login-header p {
-        font-size: 14px;
-    }
-    
-    .btn-primary {
-        font-size: 16px;
-    }
-}
-</style>
-
-<script>
-function showRegisterForm() {
-    const loginPanel = document.querySelector('.login-panel:first-of-type');
-    const registerPanel = document.getElementById('register-panel');
-    
-    loginPanel.style.display = 'none';
-    registerPanel.style.display = 'block';
-    
-    // Focus first input
-    setTimeout(() => {
-        document.getElementById('reg-username').focus();
-    }, 100);
-}
-
-function showLoginForm() {
-    const loginPanel = document.querySelector('.login-panel:first-of-type');
-    const registerPanel = document.getElementById('register-panel');
-    
-    registerPanel.style.display = 'none';
-    loginPanel.style.display = 'block';
-    
-    // Focus first input
-    setTimeout(() => {
-        document.getElementById('email').focus();
-    }, 100);
-}
-
-function showForgotPassword() {
-    alert('Password reset functionality would be implemented here. For demo purposes, use any email/password combination to login.');
-}
-
-function signInWithGoogle() {
-    // Simulate Google OAuth - in production this would integrate with Google OAuth
-    alert('Google OAuth integration would be implemented here. For demo purposes, use the regular login form.');
-}
-
-function signInWithApple() {
-    // Simulate Apple OAuth - in production this would integrate with Apple Sign In
-    alert('Apple Sign In integration would be implemented here. For demo purposes, use the regular login form.');
-}
-
-// Add input animations
-document.addEventListener('DOMContentLoaded', function() {
-    const inputs = document.querySelectorAll('.form-input');
-    
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.classList.add('focused');
-            
-            // Add subtle glow effect
-            if (window.threeBackground) {
-                window.threeBackground.addEnergyPulse(0.3);
-            }
-        });
-        
-        input.addEventListener('blur', function() {
-            if (!this.value) {
-                this.parentElement.classList.remove('focused');
-            }
-        });
-        
-        // Add floating label effect
-        input.addEventListener('input', function() {
-            if (this.value) {
-                this.parentElement.classList.add('has-value');
-            } else {
-                this.parentElement.classList.remove('has-value');
-            }
-        });
-    });
-    
-    // Add submit button animation
-    const submitBtns = document.querySelectorAll('.btn-primary');
-    submitBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            // Create ripple effect
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-            
-            ripple.style.cssText = `
-                position: absolute;
-                top: ${y}px;
-                left: ${x}px;
-                width: ${size}px;
-                height: ${size}px;
-                background: rgba(255, 255, 255, 0.3);
-                border-radius: 50%;
-                transform: scale(0);
-                animation: ripple 0.6s ease-out;
-                pointer-events: none;
-            `;
-            
-            this.style.position = 'relative';
-            this.style.overflow = 'hidden';
-            this.appendChild(ripple);
-            
-            setTimeout(() => {
-                if (ripple.parentNode) {
-                    ripple.parentNode.removeChild(ripple);
-                }
-            }, 600);
-        });
-    });
-});
-
-// Auto-focus first input when page loads
-window.addEventListener('load', function() {
-    const firstInput = document.getElementById('email');
-    if (firstInput) {
-        firstInput.focus();
-    }
-});
-</script>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}

@@ -3,322 +3,57 @@
 {% block title %}Solar Analytics - Lunar Vault{% endblock %}
 
 {% block content %}
-<div class="analytics-container">
-    <!-- Page Header with Back Navigation -->
+<div class="page-container">
     <div class="page-header">
-        <div class="header-navigation">
-            <button onclick="history.back()" class="back-btn glass-panel">
-                <i class="fas fa-arrow-left"></i>
-                <span>Back to Dashboard</span>
-            </button>
+        <h1>Solar Production Analytics</h1>
+        <p>Detailed analysis of your solar energy generation.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="card stat-card">
+            <div class="stat-label">Today's Production</div>
+            <div class="stat-value" id="total-solar-today">0 kWh</div>
         </div>
-        <div class="header-content">
-            <h1 class="page-title">
-                <i class="fas fa-sun animate-glow"></i>
-                Solar Production Analytics
-            </h1>
-            <p class="page-subtitle">Detailed analysis of your solar energy generation</p>
+        <div class="card stat-card">
+            <div class="stat-label">Peak Power</div>
+            <div class="stat-value" id="peak-solar-power">0 kW</div>
         </div>
-        <div class="header-stats">
-            <div class="stat-item holographic">
-                <div class="stat-value" id="total-solar-today">0 kWh</div>
-                <div class="stat-label">Today's Production</div>
+        <div class="card stat-card">
+            <div class="stat-label">Panel Efficiency</div>
+            <div class="stat-value" id="solar-efficiency">0%</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Solar Production Trends</h2>
+            <div class="chart-filters">
+                <button class="filter-btn active" data-period="day">24H</button>
+                <button class="filter-btn" data-period="week">7D</button>
+                <button class="filter-btn" data-period="month">30D</button>
             </div>
-            <div class="stat-item holographic">
-                <div class="stat-value" id="peak-solar-power">0 kW</div>
-                <div class="stat-label">Peak Power</div>
-            </div>
-            <div class="stat-item holographic">
-                <div class="stat-value" id="solar-efficiency">0%</div>
-                <div class="stat-label">Panel Efficiency</div>
+        </div>
+        <div class="card-content">
+            <canvas id="solar-analytics-chart" height="300"></canvas>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Key Metrics</h2>
+        </div>
+        <div class="card-content">
+            <div class="metrics-grid">
+                <div class="metric-item"><span>Average Daily Production</span><span id="avg-daily-production">0 kWh</span></div>
+                <div class="metric-item"><span>Best Day This Month</span><span id="best-day-production">0 kWh</span></div>
+                <div class="metric-item"><span>Days Above Average</span><span id="days-above-avg">0</span></div>
             </div>
         </div>
     </div>
-    
-    <!-- Main Solar Production Chart -->
-    <section class="main-chart-section">
-        <div class="glass-panel chart-container">
-            <div class="chart-header">
-                <h2 class="chart-title">
-                    <i class="fas fa-chart-area"></i>
-                    Solar Production Trends
-                </h2>
-                <div class="chart-controls">
-                    <div class="chart-filters">
-                        <button class="filter-btn active" data-period="day">24 Hours</button>
-                        <button class="filter-btn" data-period="week">7 Days</button>
-                        <button class="filter-btn" data-period="month">30 Days</button>
-                        <button class="filter-btn" data-period="year">12 Months</button>
-                        <button class="filter-btn" data-period="lifetime">Lifetime</button>
-                    </div>
-                    <div class="chart-actions">
-                        <button class="action-btn" onclick="exportSolarData()">
-                            <i class="fas fa-download"></i>
-                            Export CSV
-                        </button>
-                        <button class="action-btn" onclick="printSolarReport()">
-                            <i class="fas fa-print"></i>
-                            Print PDF
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-canvas-container">
-                <canvas id="solar-analytics-chart"></canvas>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Key Metrics Grid -->
-    <section class="metrics-section">
-        <div class="metrics-grid">
-            <!-- Daily Performance -->
-            <div class="metric-card glass-panel">
-                <div class="metric-header">
-                    <h3>Daily Performance</h3>
-                    <i class="fas fa-calendar-day"></i>
-                </div>
-                <div class="metric-content">
-                    <div class="metric-row">
-                        <span>Average Daily Production</span>
-                        <span id="avg-daily-production" class="metric-value">0 kWh</span>
-                    </div>
-                    <div class="metric-row">
-                        <span>Best Day This Month</span>
-                        <span id="best-day-production" class="metric-value">0 kWh</span>
-                    </div>
-                    <div class="metric-row">
-                        <span>Days Above Average</span>
-                        <span id="days-above-avg" class="metric-value">0</span>
-                    </div>
-                </div>
-                <div class="metric-trend">
-                    <i class="fas fa-arrow-up trend-icon"></i>
-                    <span>+12% vs last month</span>
-                </div>
-            </div>
-            
-            <!-- Weather Impact -->
-            <div class="metric-card glass-panel">
-                <div class="metric-header">
-                    <h3>Weather Impact</h3>
-                    <i class="fas fa-cloud-sun"></i>
-                </div>
-                <div class="metric-content">
-                    <div class="metric-row">
-                        <span>Sunny Days</span>
-                        <span id="sunny-days" class="metric-value">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span>Cloudy Days</span>
-                        <span id="cloudy-days" class="metric-value">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span>Weather Efficiency</span>
-                        <span id="weather-efficiency" class="metric-value">0%</span>
-                    </div>
-                </div>
-                <div class="metric-trend">
-                    <i class="fas fa-sun trend-icon"></i>
-                    <span>Optimal conditions expected</span>
-                </div>
-            </div>
-            
-            <!-- System Health -->
-            <div class="metric-card glass-panel">
-                <div class="metric-header">
-                    <h3>System Health</h3>
-                    <i class="fas fa-heartbeat"></i>
-                </div>
-                <div class="metric-content">
-                    <div class="metric-row">
-                        <span>Panel Efficiency</span>
-                        <span id="panel-efficiency" class="metric-value">98.5%</span>
-                    </div>
-                    <div class="metric-row">
-                        <span>Inverter Status</span>
-                        <span id="inverter-status" class="metric-value status-online">Online</span>
-                    </div>
-                    <div class="metric-row">
-                        <span>Last Maintenance</span>
-                        <span id="last-maintenance" class="metric-value">30 days ago</span>
-                    </div>
-                </div>
-                <div class="metric-trend">
-                    <i class="fas fa-check-circle trend-icon"></i>
-                    <span>All systems operational</span>
-                </div>
-            </div>
-            
-            <!-- Production Comparison -->
-            <div class="metric-card glass-panel">
-                <div class="metric-header">
-                    <h3>Production Comparison</h3>
-                    <i class="fas fa-balance-scale"></i>
-                </div>
-                <div class="metric-content">
-                    <div class="metric-row">
-                        <span>This Month</span>
-                        <span id="this-month-production" class="metric-value">0 kWh</span>
-                    </div>
-                    <div class="metric-row">
-                        <span>Last Month</span>
-                        <span id="last-month-production" class="metric-value">0 kWh</span>
-                    </div>
-                    <div class="metric-row">
-                        <span>Same Month Last Year</span>
-                        <span id="last-year-production" class="metric-value">0 kWh</span>
-                    </div>
-                </div>
-                <div class="metric-trend">
-                    <i class="fas fa-chart-line trend-icon"></i>
-                    <span id="production-trend">Calculating...</span>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Solar Forecast -->
-    <section class="forecast-section">
-        <div class="glass-panel">
-            <div class="section-header">
-                <h2 class="chart-title">
-                    <i class="fas fa-crystal-ball"></i>
-                    7-Day Solar Forecast
-                </h2>
-                <div class="forecast-legend">
-                    <span class="legend-item">
-                        <div class="legend-color solar"></div>
-                        Predicted Production
-                    </span>
-                    <span class="legend-item">
-                        <div class="legend-color historical"></div>
-                        Historical Average
-                    </span>
-                </div>
-            </div>
-            <div id="solar-forecast-container" class="forecast-container">
-                <!-- Forecast will be populated by JavaScript -->
-            </div>
-        </div>
-    </section>
-    
-    <!-- Optimization Recommendations -->
-    <section class="optimization-section">
-        <div class="glass-panel">
-            <h2 class="chart-title">
-                <i class="fas fa-cogs"></i>
-                Optimization Opportunities
-            </h2>
-            <div id="solar-recommendations" class="optimization-grid">
-                <!-- Recommendations will be populated by JavaScript -->
-            </div>
-        </div>
-    </section>
+
 </div>
+{% endblock %}
 
-
-<script>
-function exportSolarData() {
-    // Simulate CSV export
-    const csvContent = `Date,Solar Production (kWh),Weather,Efficiency
-${new Date().toISOString().split('T')[0]},25.4,Sunny,98.5%
-${new Date(Date.now() - 86400000).toISOString().split('T')[0]},22.1,Partly Cloudy,96.2%
-${new Date(Date.now() - 172800000).toISOString().split('T')[0]},18.7,Cloudy,94.1%`;
-    
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'solar_analytics_data.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-}
-
-function printSolarReport() {
-    window.print();
-}
-
-// Generate forecast data
-document.addEventListener('DOMContentLoaded', function() {
-    generateSolarForecast();
-    generateOptimizationRecommendations();
-    updateSolarMetrics();
-});
-
-function generateSolarForecast() {
-    const container = document.getElementById('solar-forecast-container');
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const weather = ['☀️', '⛅', '☁️', '☀️', '☀️', '⛅', '☀️'];
-    const production = [28.5, 22.1, 15.8, 30.2, 29.8, 25.4, 27.6];
-    const conditions = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Clear', 'Sunny', 'Mixed', 'Clear'];
-    
-    container.innerHTML = days.map((day, index) => `
-        <div class="forecast-day">
-            <div class="forecast-date">${day}</div>
-            <div class="forecast-weather">${weather[index]}</div>
-            <div class="forecast-production">${production[index]} kWh</div>
-            <div class="forecast-conditions">${conditions[index]}</div>
-        </div>
-    `).join('');
-}
-
-function generateOptimizationRecommendations() {
-    const container = document.getElementById('solar-recommendations');
-    const recommendations = [
-        {
-            title: 'Panel Cleaning Schedule',
-            description: 'Your panels haven\'t been cleaned in 45 days. Regular cleaning can improve efficiency by 3-5%.',
-            savings: '+$15/month',
-            difficulty: 'Easy'
-        },
-        {
-            title: 'Optimize Panel Angle',
-            description: 'Adjusting panel tilt by 5° for winter season could increase production by 8%.',
-            savings: '+$32/month',
-            difficulty: 'Moderate'
-        },
-        {
-            title: 'Add Battery Storage',
-            description: 'With your current excess production, a 10kWh battery could save an additional 15% on energy costs.',
-            savings: '+$85/month',
-            difficulty: 'Professional'
-        },
-        {
-            title: 'Smart Inverter Upgrade',
-            description: 'Upgrading to a smart inverter with DC optimizers could increase overall system efficiency by 12%.',
-            savings: '+$48/month',
-            difficulty: 'Professional'
-        }
-    ];
-    
-    container.innerHTML = recommendations.map(rec => `
-        <div class="optimization-card">
-            <div class="optimization-title">${rec.title}</div>
-            <div class="optimization-description">${rec.description}</div>
-            <div class="optimization-impact">
-                <span class="optimization-savings">${rec.savings}</span>
-                <span class="optimization-difficulty">${rec.difficulty}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-function updateSolarMetrics() {
-    // Simulate real metrics - in production these would come from API
-    document.getElementById('total-solar-today').textContent = '28.5 kWh';
-    document.getElementById('peak-solar-power').textContent = '8.2 kW';
-    document.getElementById('solar-efficiency').textContent = '98.5%';
-    document.getElementById('avg-daily-production').textContent = '25.8 kWh';
-    document.getElementById('best-day-production').textContent = '32.1 kWh';
-    document.getElementById('days-above-avg').textContent = '18';
-    document.getElementById('sunny-days').textContent = '22';
-    document.getElementById('cloudy-days').textContent = '8';
-    document.getElementById('weather-efficiency').textContent = '94.2%';
-    document.getElementById('this-month-production').textContent = '748 kWh';
-    document.getElementById('last-month-production').textContent = '692 kWh';
-    document.getElementById('last-year-production').textContent = '651 kWh';
-    document.getElementById('production-trend').textContent = '+15% improvement year-over-year';
-}
-</script>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/solar.js') }}"></script>
 {% endblock %}

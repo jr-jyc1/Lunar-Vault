@@ -1,174 +1,49 @@
 {% extends "base.html" %}
 
-{% block title %}Battery Analytics - Lunar Vault{% endblock %}
+{% block title %}Battery - Lunar Vault{% endblock %}
 
 {% block content %}
 <div class="page-container">
-    <!-- Simple Header -->
     <div class="page-header">
-        <button onclick="history.back()" class="back-btn">
-            <i class="fas fa-arrow-left"></i>
-            Back
-        </button>
-        <h1 class="page-title">Battery</h1>
+        <h1>Battery</h1>
+        <p>Monitor your battery's performance and health.</p>
     </div>
 
-    <!-- Main Stats -->
     <div class="stats-grid">
-        <div class="stat-card">
+        <div class="card stat-card">
+            <div class="stat-label">Charge Level</div>
             <div class="stat-value" id="battery-level">50%</div>
-            <div class="stat-label">Level</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="battery-capacity">10 kWh</div>
+        <div class="card stat-card">
             <div class="stat-label">Capacity</div>
+            <div class="stat-value" id="battery-capacity">10 kWh</div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-label">Health</div>
+            <div class="stat-value" id="battery-health">98%</div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-label">Cycles</div>
+            <div class="stat-value" id="battery-cycles">342</div>
         </div>
     </div>
 
-    <!-- Simple Chart -->
-    <div class="chart-section">
-        <div class="chart-card">
-            <h2 class="chart-title">Battery Trend</h2>
-            <div class="chart-container">
-                <canvas id="battery-chart"></canvas>
+    <div class="card">
+        <div class="card-header">
+            <h2>Battery Level Trend</h2>
+            <div class="chart-filters">
+                <button class="filter-btn active" data-period="day">24H</button>
+                <button class="filter-btn" data-period="week">7D</button>
             </div>
         </div>
+        <div class="card-content">
+            <canvas id="battery-chart" height="300"></canvas>
+        </div>
     </div>
+
 </div>
+{% endblock %}
 
-<style>
-.analytics-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.page-header {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-    margin-bottom: 40px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid var(--glass-border);
-}
-
-.back-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    background: var(--glass-bg);
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.back-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(-5px);
-}
-
-.page-title {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    background: linear-gradient(45deg, var(--battery-color), var(--accent-tertiary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.page-subtitle {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-}
-
-.status-section {
-    margin: 40px 0;
-}
-
-.status-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.status-item {
-    text-align: center;
-    padding: 20px;
-}
-
-.status-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--battery-color);
-    margin-bottom: 5px;
-}
-
-.status-label {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.chart-container {
-    padding: 24px;
-    height: 400px;
-}
-
-.chart-canvas-container {
-    position: relative;
-    height: 350px;
-    margin-top: 20px;
-}
-
-@media (max-width: 768px) {
-    .page-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-    }
-
-    .status-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    .status-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize battery chart
-    const ctx = document.getElementById('battery-chart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
-            datasets: [{
-                label: 'Battery Level (%)',
-                data: [45, 60, 80, 70, 55, 50],
-                borderColor: 'var(--battery-color)',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100
-                }
-            }
-        }
-    });
-});
-</script>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/battery.js') }}"></script>
 {% endblock %}

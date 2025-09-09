@@ -22,6 +22,16 @@ class LunarVault {
         if (themeToggle) {
             themeToggle.addEventListener('click', () => this.toggleTheme());
         }
+
+        // Hamburger menu toggle
+        const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+        const mainNav = document.querySelector('.main-nav');
+
+        if (mobileNavToggle && mainNav) {
+            mobileNavToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+            });
+        }
         
         // Navigation
         document.querySelectorAll('.nav-icon').forEach(icon => {
