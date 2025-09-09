@@ -44,7 +44,7 @@ class EnergySimulator:
             if self.current_battery < self.battery_capacity:
                 charge_amount = min(net_production, self.battery_capacity - self.current_battery)
                 battery_charge_rate = charge_amount
-                self.current_battery += charge_amount * 0.1  # Simulate charging
+                self.current_battery += charge_amount  # Simulate charging
                 net_production -= charge_amount
             
             if net_production > 0:
@@ -55,7 +55,7 @@ class EnergySimulator:
             if self.current_battery > 0:
                 discharge_amount = min(deficit, self.current_battery)
                 battery_charge_rate = -discharge_amount
-                self.current_battery -= discharge_amount * 0.1  # Simulate discharging
+                self.current_battery -= discharge_amount  # Simulate discharging
                 deficit -= discharge_amount
             
             if deficit > 0:
