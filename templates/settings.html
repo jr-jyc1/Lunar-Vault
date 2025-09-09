@@ -1,0 +1,2623 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Lunar Vault{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-navigation">
+            <button onclick="history.back()" class="back-btn glass-panel">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Dashboard</span>
+            </button>
+        </div>
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fas fa-cog animate-glow icon-accent-primary"></i>
+                System Settings
+            </h1>
+            <p class="page-subtitle">Configure your energy management system and preferences</p>
+        </div>
+        <div class="header-actions">
+            <button class="action-btn" onclick="saveAllSettings()">
+                <i class="fas fa-save"></i>
+                Save All Changes
+            </button>
+        </div>
+    </div>
+    
+    <!-- Settings Navigation -->
+    <nav class="settings-nav">
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+            <button class="nav-tab" data-tab="system">
+                <i class="fas fa-solar-panel"></i>
+                <span>Energy System</span>
+            </button>
+            <button class="nav-tab" data-tab="preferences">
+                <i class="fas fa-palette"></i>
+                <span>Preferences</span>
+            </button>
+            <button class="nav-tab" data-tab="notifications">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </button>
+            <button class="nav-tab" data-tab="data">
+                <i class="fas fa-database"></i>
+                <span>Data & Privacy</span>
+            </button>
+            <button class="nav-tab" data-tab="security">
+                <i class="fas fa-shield-alt"></i>
+                <span>Security</span>
+            </button>
+            <button class="nav-tab" data-tab="diagnostics">
+                <i class="fas fa-stethoscope"></i>
+                <span>Diagnostics</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Profile Settings -->
+    <section id="profile-settings" class="settings-section active">
+        <div class="glass-panel settings-panel">
+            <div class="panel-header">
+                <h2>
+                    <i class="fas fa-user-circle icon-accent-primary"></i>
+                    Profile Information
+                </h2>
+                <p>Manage your account details and personal information</p>
+            </div>
+            
+            <div class="settings-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" id="username" name="username" class="form-input" value="{{ current_user.username }}" required>
+                        <div class="field-hint">This is how you'll be identified in the system</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-input" value="{{ current_user.email }}" required>
+                        <div class="field-hint">Used for notifications and account recovery</div>
+                    </div>
+                </div>
+                
+                <div class="form-divider">
+                    <span>Password Management</span>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="current-password" class="form-label">Current Password</label>
+                        <input type="password" id="current-password" name="current-password" class="form-input" placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password" class="form-label">New Password</label>
+                        <input type="password" id="new-password" name="new-password" class="form-input" placeholder="Enter new password">
+                        <div class="password-strength" id="password-strength"></div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" onclick="updateProfile()">
+                        <i class="fas fa-save"></i>
+                        Update Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Energy System Settings -->
+    <section id="system-settings" class="settings-section">
+        <!-- Solar configuration (more settings for panels) -->
+        <div class="glass-panel settings-panel">
+            <div class="panel-header">
+                <h2>
+                    <i class="fas fa-solar-panel icon-solar-color"></i>
+                    Energy System Configuration
+                </h2>
+                <p>Configure your solar panels, battery, and grid connection settings</p>
+            </div>
+            
+            <div class="system-config">
+                <!-- Solar Panel Configuration -->
+                <div class="config-section">
+                    <h3>
+                        <i class="fas fa-sun icon-solar-color"></i>
+                        Solar Panel System
+                    </h3>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label for="panel-capacity" class="config-label">System Capacity (kW)</label>
+                            <input type="number" id="panel-capacity" class="config-input" value="8.5" step="0.1" min="0">
+                        </div>
+                        <div class="config-item">
+                            <label for="panel-count" class="config-label">Number of Panels</label>
+                            <input type="number" id="panel-count" class="config-input" value="24" min="1">
+                        </div>
+                        <div class="config-item">
+                            <label for="panel-efficiency" class="config-label">Panel Efficiency (%)</label>
+                            <input type="number" id="panel-efficiency" class="config-input" value="22.5" step="0.1" min="0" max="100">
+                        </div>
+                        <div class="config-item">
+                            <label for="panel-orientation" class="config-label">Orientation</label>
+                            <select id="panel-orientation" class="config-select">
+                                <option value="south">South</option>
+                                <option value="southwest">Southwest</option>
+                                <option value="southeast">Southeast</option>
+                                <option value="east">East</option>
+                                <option value="west">West</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="panel-tilt" class="config-label">Tilt Angle (°)</label>
+                            <input type="number" id="panel-tilt" class="config-input" value="35" min="0" max="90">
+                        </div>
+                        <div class="config-item">
+                            <label for="installation-date" class="config-label">Installation Date</label>
+                            <input type="date" id="installation-date" class="config-input" value="2023-06-15">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Battery Configuration -->
+                <div class="config-section">
+                    <h3>
+                        <i class="fas fa-battery-full icon-battery-color"></i>
+                        Battery Storage System
+                    </h3>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label for="battery-capacity" class="config-label">Capacity (kWh)</label>
+                            <input type="number" id="battery-capacity" class="config-input" value="13.5" step="0.1" min="0">
+                        </div>
+                        <div class="config-item">
+                            <label for="battery-type" class="config-label">Battery Type</label>
+                            <select id="battery-type" class="config-select">
+                                <option value="lithium-ion">Lithium-Ion</option>
+                                <option value="lfp">LiFePO4</option>
+                                <option value="lead-acid">Lead-Acid</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="max-discharge" class="config-label">Max Discharge Rate (kW)</label>
+                            <input type="number" id="max-discharge" class="config-input" value="5.0" step="0.1" min="0">
+                        </div>
+                        <div class="config-item">
+                            <label for="max-charge" class="config-label">Max Charge Rate (kW)</label>
+                            <input type="number" id="max-charge" class="config-input" value="5.0" step="0.1" min="0">
+                        </div>
+                        <div class="config-item">
+                            <label for="backup-reserve" class="config-label">Backup Reserve (%)</label>
+                            <input type="number" id="backup-reserve" class="config-input" value="20" min="0" max="100">
+                        </div>
+                        <div class="config-item">
+                            <label for="battery-warranty" class="config-label">Warranty (Years)</label>
+                            <input type="number" id="battery-warranty" class="config-input" value="10" min="1">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Grid Connection -->
+                <div class="config-section">
+                    <h3>
+                        <i class="fas fa-plug icon-grid-color"></i>
+                        Grid Connection
+                    </h3>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label for="utility-provider" class="config-label">Utility Provider</label>
+                            <input type="text" id="utility-provider" class="config-input" value="Pacific Gas & Electric" placeholder="Enter utility company">
+                        </div>
+                        <div class="config-item">
+                            <label for="rate-plan" class="config-label">Rate Plan</label>
+                            <select id="rate-plan" class="config-select">
+                                <option value="tou-peak">Time-of-Use Peak</option>
+                                <option value="tou-off-peak">Time-of-Use Off-Peak</option>
+                                <option value="tiered">Tiered Rate</option>
+                                <option value="flat">Flat Rate</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="net-metering" class="config-label">Net Metering</label>
+                            <select id="net-metering" class="config-select">
+                                <option value="nem-2.0">NEM 2.0</option>
+                                <option value="nem-3.0">NEM 3.0</option>
+                                <option value="wholesale">Wholesale Rate</option>
+                                <option value="none">Not Available</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="peak-rate" class="config-label">Peak Rate ($/kWh)</label>
+                            <input type="number" id="peak-rate" class="config-input" value="0.18" step="0.01" min="0">
+                        </div>
+                        <div class="config-item">
+                            <label for="off-peak-rate" class="config-label">Off-Peak Rate ($/kWh)</label>
+                            <input type="number" id="off-peak-rate" class="config-input" value="0.08" step="0.01" min="0">
+                        </div>
+                        <div class="config-item">
+                            <label for="export-rate" class="config-label">Export Rate ($/kWh)</label>
+                            <input type="number" id="export-rate" class="config-input" value="0.08" step="0.01" min="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-primary" onclick="updateSystemConfig()">
+                    <i class="fas fa-save"></i>
+                    Save System Configuration
+                </button>
+                <button type="button" class="btn-secondary" onclick="runSystemCalibration()">
+                    <i class="fas fa-cogs"></i>
+                    Run System Calibration
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Preferences Settings -->
+    <section id="preferences-settings" class="settings-section">
+        <div class="glass-panel settings-panel">
+            <div class="panel-header">
+                <h2>
+                    <i class="fas fa-palette icon-accent-secondary"></i>
+                    Display & Interface Preferences
+                </h2>
+                <p>Customize your dashboard appearance and user experience</p>
+            </div>
+            
+            <div class="preferences-grid">
+                <!-- Theme Settings -->
+                <div class="preference-group">
+                    <h3>Theme & Appearance</h3>
+                    <div class="preference-item">
+                        <label class="preference-label">Color Theme</label>
+                        <div class="theme-selector">
+                            <div class="theme-option" data-theme="dark">
+                                <div class="theme-preview dark-preview"></div>
+                                <span>Dark Mode</span>
+                                <i class="fas fa-check theme-check"></i>
+                            </div>
+                            <div class="theme-option" data-theme="light">
+                                <div class="theme-preview light-preview"></div>
+                                <span>Light Mode</span>
+                                <i class="fas fa-check theme-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <label class="preference-label">Background Animation</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="background-animation" checked>
+                            <label for="background-animation" class="toggle-label">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <span class="preference-description">Enable 3D cosmic background animation</span>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <label class="preference-label">Particle Effects</label>
+                        <select id="particle-quality" class="preference-select">
+                            <option value="high">High Quality</option>
+                            <option value="medium" selected>Medium Quality</option>
+                            <option value="low">Low Quality</option>
+                            <option value="off">Disabled</option>
+                        </select>
+                        <span class="preference-description">Energy flow particle density and quality</span>
+                    </div>
+                </div>
+                
+                <!-- Dashboard Layout -->
+                <div class="preference-group">
+                    <h3>Dashboard Layout</h3>
+                    <div class="preference-item">
+                        <label class="preference-label">Default Time Range</label>
+                        <select class="preference-select">
+                            <option value="day" selected>24 Hours</option>
+                            <option value="week">7 Days</option>
+                            <option value="month">30 Days</option>
+                        </select>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <label class="preference-label">Auto-refresh Interval</label>
+                        <select class="preference-select">
+                            <option value="5">5 seconds</option>
+                            <option value="10" selected>10 seconds</option>
+                            <option value="30">30 seconds</option>
+                            <option value="60">1 minute</option>
+                        </select>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <label class="preference-label">Holographic Effects</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="holographic-effects" checked>
+                            <label for="holographic-effects" class="toggle-label">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <span class="preference-description">Enable floating holographic KPI indicators</span>
+                    </div>
+                </div>
+                
+                <!-- Units & Formatting -->
+                <div class="preference-group">
+                    <h3>Units & Formatting</h3>
+                    <div class="preference-item">
+                        <label class="preference-label">Energy Units</label>
+                        <select class="preference-select">
+                            <option value="kwh" selected>kWh (Kilowatt-hours)</option>
+                            <option value="mwh">MWh (Megawatt-hours)</option>
+                            <option value="wh">Wh (Watt-hours)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <label class="preference-label">Currency</label>
+                        <select class="preference-select">
+                            <option value="usd" selected>USD ($)</option>
+                            <option value="eur">EUR (€)</option>
+                            <option value="gbp">GBP (£)</option>
+                            <option value="cad">CAD (C$)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <label class="preference-label">Temperature Units</label>
+                        <select class="preference-select">
+                            <option value="fahrenheit" selected>Fahrenheit (°F)</option>
+                            <option value="celsius">Celsius (°C)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-primary" onclick="updatePreferences()">
+                    <i class="fas fa-save"></i>
+                    Save Preferences
+                </button>
+                <button type="button" class="btn-secondary" onclick="resetToDefaults()">
+                    <i class="fas fa-undo"></i>
+                    Reset to Defaults
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Notifications Settings -->
+    <section id="notifications-settings" class="settings-section">
+        <div class="glass-panel settings-panel">
+            <div class="panel-header">
+                <h2>
+                    <i class="fas fa-bell icon-accent-tertiary"></i>
+                    Notification Preferences
+                </h2>
+                <p>Control when and how you receive energy system alerts and updates</p>
+            </div>
+            
+            <div class="notifications-config">
+                <!-- Alert Types -->
+                <div class="notification-group">
+                    <h3>System Alerts</h3>
+                    <div class="notification-items">
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <i class="fas fa-exclamation-triangle icon-accent-tertiary"></i>
+                                <div>
+                                    <span class="notification-title">System Failures</span>
+                                    <span class="notification-desc">Critical system issues requiring immediate attention</span>
+                                </div>
+                            </div>
+                            <div class="notification-controls">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="alerts-failures" checked>
+                                    <label for="alerts-failures" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <i class="fas fa-battery-quarter icon-battery-color"></i>
+                                <div>
+                                    <span class="notification-title">Low Battery</span>
+                                    <span class="notification-desc">When battery level drops below 20%</span>
+                                </div>
+                            </div>
+                            <div class="notification-controls">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="alerts-battery" checked>
+                                    <label for="alerts-battery" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <i class="fas fa-plug icon-grid-color"></i>
+                                <div>
+                                    <span class="notification-title">Grid Outages</span>
+                                    <span class="notification-desc">Power grid connection issues</span>
+                                </div>
+                            </div>
+                            <div class="notification-controls">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="alerts-grid" checked>
+                                    <label for="alerts-grid" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Performance Updates -->
+                <div class="notification-group">
+                    <h3>Performance Updates</h3>
+                    <div class="notification-items">
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <i class="fas fa-chart-line icon-accent-primary"></i>
+                                <div>
+                                    <span class="notification-title">Daily Reports</span>
+                                    <span class="notification-desc">Daily energy production and consumption summary</span>
+                                </div>
+                            </div>
+                            <div class="notification-controls">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="reports-daily">
+                                    <label for="reports-daily" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <i class="fas fa-calendar-week icon-accent-primary"></i>
+                                <div>
+                                    <span class="notification-title">Weekly Reports</span>
+                                    <span class="notification-desc">Weekly performance analysis and recommendations</span>
+                                </div>
+                            </div>
+                            <div class="notification-controls">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="reports-weekly" checked>
+                                    <label for="reports-weekly" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <i class="fas fa-lightbulb icon-accent-tertiary"></i>
+                                <div>
+                                    <span class="notification-title">Optimization Tips</span>
+                                    <span class="notification-desc">Smart recommendations for energy savings</span>
+                                </div>
+                            </div>
+                            <div class="notification-controls">
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="tips-optimization" checked>
+                                    <label for="tips-optimization" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Delivery Methods -->
+                <div class="notification-group">
+                    <h3>Delivery Methods</h3>
+                    <div class="delivery-methods">
+                        <div class="delivery-method">
+                            <div class="method-header">
+                                <i class="fas fa-envelope icon-accent-primary"></i>
+                                <span>Email Notifications</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="delivery-email" checked>
+                                    <label for="delivery-email" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="method-config">
+                                <label for="email-address" class="config-label">Email Address</label>
+                                <input type="email" id="email-address" class="config-input" value="{{ current_user.email }}">
+                            </div>
+                        </div>
+                        
+                        <div class="delivery-method">
+                            <div class="method-header">
+                                <i class="fas fa-mobile-alt icon-accent-secondary"></i>
+                                <span>SMS Notifications</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="delivery-sms">
+                                    <label for="delivery-sms" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="method-config">
+                                <label for="phone-number" class="config-label">Phone Number</label>
+                                <input type="tel" id="phone-number" class="config-input" placeholder="+1 (555) 123-4567">
+                            </div>
+                        </div>
+                        
+                        <div class="delivery-method">
+                            <div class="method-header">
+                                <i class="fas fa-desktop icon-accent-tertiary"></i>
+                                <span>In-App Notifications</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="delivery-app" checked>
+                                    <label for="delivery-app" class="toggle-label">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-primary" onclick="updateNotifications()">
+                    <i class="fas fa-save"></i>
+                    Save Notification Settings
+                </button>
+                <button type="button" class="btn-secondary" onclick="testNotifications()">
+                    <i class="fas fa-paper-plane"></i>
+                    Send Test Notification
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Data & Privacy Settings -->
+    <section id="data-settings" class="settings-section">
+        <div class="glass-panel settings-panel">
+            <div class="panel-header">
+                <h2>
+                    <i class="fas fa-database icon-accent-primary"></i>
+                    Data Management & Privacy
+                </h2>
+                <p>Control your data retention, export options, and privacy settings</p>
+            </div>
+            
+            <div class="data-management">
+                <!-- Data Export -->
+                <div class="data-group">
+                    <h3>Data Export & Backup</h3>
+                    <div class="export-options">
+                        <div class="export-option">
+                            <div class="export-info">
+                                <i class="fas fa-download icon-accent-primary"></i>
+                                <div>
+                                    <span class="export-title">Complete Data Export</span>
+                                    <span class="export-desc">Download all your energy data in CSV format</span>
+                                </div>
+                            </div>
+                            <button class="btn-secondary" onclick="exportAllData()">
+                                <i class="fas fa-download"></i>
+                                Export All Data
+                            </button>
+                        </div>
+                        
+                        <div class="export-option">
+                            <div class="export-info">
+                                <i class="fas fa-file-pdf icon-accent-secondary"></i>
+                                <div>
+                                    <span class="export-title">Monthly Reports</span>
+                                    <span class="export-desc">Generate PDF reports for insurance or tax purposes</span>
+                                </div>
+                            </div>
+                            <button class="btn-secondary" onclick="generateMonthlyReport()">
+                                <i class="fas fa-file-pdf"></i>
+                                Generate Report
+                            </button>
+                        </div>
+                        
+                        <div class="export-option">
+                            <div class="export-info">
+                                <i class="fas fa-cloud-upload-alt icon-battery-color"></i>
+                                <div>
+                                    <span class="export-title">Automatic Backup</span>
+                                    <span class="export-desc">Enable automatic cloud backup of your data</span>
+                                </div>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="auto-backup">
+                                <label for="auto-backup" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Retention -->
+                <div class="data-group">
+                    <h3>Data Retention Policy</h3>
+                    <div class="retention-settings">
+                        <div class="retention-item">
+                            <label class="retention-label">Real-time Data</label>
+                            <select class="preference-select">
+                                <option value="7">Keep for 7 days</option>
+                                <option value="30" selected>Keep for 30 days</option>
+                                <option value="90">Keep for 90 days</option>
+                                <option value="365">Keep for 1 year</option>
+                            </select>
+                        </div>
+                        
+                        <div class="retention-item">
+                            <label class="retention-label">Historical Analytics</label>
+                            <select class="preference-select">
+                                <option value="365">Keep for 1 year</option>
+                                <option value="1095" selected>Keep for 3 years</option>
+                                <option value="1825">Keep for 5 years</option>
+                                <option value="forever">Keep forever</option>
+                            </select>
+                        </div>
+                        
+                        <div class="retention-item">
+                            <label class="retention-label">System Logs</label>
+                            <select class="preference-select">
+                                <option value="30">Keep for 30 days</option>
+                                <option value="90" selected>Keep for 90 days</option>
+                                <option value="365">Keep for 1 year</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Privacy Controls -->
+                <div class="data-group">
+                    <h3>Privacy & Sharing</h3>
+                    <div class="privacy-controls">
+                        <div class="privacy-item">
+                            <div class="privacy-info">
+                                <span class="privacy-title">Anonymous Usage Analytics</span>
+                                <span class="privacy-desc">Help improve Lunar Vault by sharing anonymous usage data</span>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="anonymous-analytics" checked>
+                                <label for="anonymous-analytics" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="privacy-item">
+                            <div class="privacy-info">
+                                <span class="privacy-title">Performance Benchmarking</span>
+                                <span class="privacy-desc">Compare your system anonymously with similar installations</span>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="benchmarking">
+                                <label for="benchmarking" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="privacy-item">
+                            <div class="privacy-info">
+                                <span class="privacy-title">Third-party Integrations</span>
+                                <span class="privacy-desc">Allow approved third-party services to access your data</span>
+                            </div>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="third-party">
+                                <label for="third-party" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-primary" onclick="updateDataSettings()">
+                    <i class="fas fa-save"></i>
+                    Save Data Settings
+                </button>
+                <button type="button" class="btn-danger" onclick="deleteAllData()">
+                    <i class="fas fa-trash"></i>
+                    Delete All Data
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Security Settings -->
+    <section id="security-settings" class="settings-section">
+        <div class="glass-panel settings-panel">
+            <div class="panel-header">
+                <h2>
+                    <i class="fas fa-shield-alt icon-battery-color"></i>
+                    Security & Access Control
+                </h2>
+                <p>Manage your account security and access permissions</p>
+            </div>
+            
+            <div class="security-config">
+                <!-- Two-Factor Authentication -->
+                <div class="security-group">
+                    <h3>Two-Factor Authentication</h3>
+                    <div class="security-status">
+                        <div class="status-indicator inactive">
+                            <i class="fas fa-times-circle"></i>
+                            <span>2FA Not Enabled</span>
+                        </div>
+                        <button class="btn-primary" onclick="setup2FA()">
+                            <i class="fas fa-mobile-alt"></i>
+                            Enable 2FA
+                        </button>
+                    </div>
+                    <p class="security-desc">Add an extra layer of security to your account by requiring a second form of authentication.</p>
+                </div>
+                
+                <!-- API Keys -->
+                <div class="security-group">
+                    <h3>API Access Keys</h3>
+                    <div class="api-keys">
+                        <div class="api-key-item">
+                            <div class="api-info">
+                                <span class="api-name">Mobile App Access</span>
+                                <span class="api-key">lv_••••••••••••••••••••••••••••••2a8f</span>
+                                <span class="api-created">Created: August 15, 2025</span>
+                            </div>
+                            <div class="api-actions">
+                                <button class="btn-small" onclick="regenerateKey('mobile')">
+                                    <i class="fas fa-redo"></i>
+                                    Regenerate
+                                </button>
+                                <button class="btn-small btn-danger" onclick="revokeKey('mobile')">
+                                    <i class="fas fa-trash"></i>
+                                    Revoke
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="api-key-item">
+                            <div class="api-info">
+                                <span class="api-name">Third-party Integration</span>
+                                <span class="api-key">lv_••••••••••••••••••••••••••••••9b3c</span>
+                                <span class="api-created">Created: July 22, 2025</span>
+                            </div>
+                            <div class="api-actions">
+                                <button class="btn-small" onclick="regenerateKey('integration')">
+                                    <i class="fas fa-redo"></i>
+                                    Regenerate
+                                </button>
+                                <button class="btn-small btn-danger" onclick="revokeKey('integration')">
+                                    <i class="fas fa-trash"></i>
+                                    Revoke
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" onclick="generateNewKey()">
+                        <i class="fas fa-plus"></i>
+                        Generate New API Key
+                    </button>
+                </div>
+                
+                <!-- Session Management -->
+                <div class="security-group">
+                    <h3>Active Sessions</h3>
+                    <div class="active-sessions">
+                        <div class="session-item current">
+                            <div class="session-info">
+                                <i class="fas fa-desktop session-icon"></i>
+                                <div>
+                                    <span class="session-device">Chrome on Windows</span>
+                                    <span class="session-location">San Francisco, CA</span>
+                                    <span class="session-time">Current session</span>
+                                </div>
+                            </div>
+                            <span class="session-badge current-badge">Current</span>
+                        </div>
+                        
+                        <div class="session-item">
+                            <div class="session-info">
+                                <i class="fas fa-mobile-alt session-icon"></i>
+                                <div>
+                                    <span class="session-device">iPhone Safari</span>
+                                    <span class="session-location">San Francisco, CA</span>
+                                    <span class="session-time">2 hours ago</span>
+                                </div>
+                            </div>
+                            <button class="btn-small btn-danger" onclick="terminateSession('mobile')">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Terminate
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" onclick="terminateAllSessions()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Terminate All Other Sessions
+                    </button>
+                </div>
+                
+                <!-- Account Recovery -->
+                <div class="security-group">
+                    <h3>Account Recovery</h3>
+                    <div class="recovery-options">
+                        <div class="recovery-item">
+                            <span class="recovery-label">Recovery Email</span>
+                            <span class="recovery-value">{{ current_user.email }}</span>
+                            <button class="btn-small" onclick="updateRecoveryEmail()">
+                                <i class="fas fa-edit"></i>
+                                Update
+                            </button>
+                        </div>
+                        
+                        <div class="recovery-item">
+                            <span class="recovery-label">Recovery Codes</span>
+                            <span class="recovery-value">Not generated</span>
+                            <button class="btn-small" onclick="generateRecoveryCodes()">
+                                <i class="fas fa-key"></i>
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-primary" onclick="updateSecuritySettings()">
+                    <i class="fas fa-save"></i>
+                    Save Security Settings
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Diagnostics Settings -->
+    <section id="diagnostics-settings" class="settings-section">
+        <div class="glass-panel settings-panel">
+            <div class="panel-header">
+                <h2>
+                    <i class="fas fa-stethoscope icon-accent-primary"></i>
+                    System Diagnostics & Maintenance
+                </h2>
+                <p>Monitor system health and perform maintenance tasks</p>
+            </div>
+            
+            <div class="diagnostics-dashboard">
+                <!-- System Health Overview -->
+                <div class="health-overview">
+                    <h3>System Health Status</h3>
+                    <div class="health-grid">
+                        <div class="health-item">
+                            <div class="health-icon">
+                                <i class="fas fa-sun icon-solar-color"></i>
+                            </div>
+                            <div class="health-info">
+                                <span class="health-component">Solar System</span>
+                                <span class="health-status online">Online</span>
+                                <span class="health-performance">98.5% efficiency</span>
+                            </div>
+                        </div>
+                        
+                        <div class="health-item">
+                            <div class="health-icon">
+                                <i class="fas fa-battery-full icon-battery-color"></i>
+                            </div>
+                            <div class="health-info">
+                                <span class="health-component">Battery</span>
+                                <span class="health-status online">Healthy</span>
+                                <span class="health-performance">2,847 cycles</span>
+                            </div>
+                        </div>
+                        
+                        <div class="health-item">
+                            <div class="health-icon">
+                                <i class="fas fa-plug icon-grid-color"></i>
+                            </div>
+                            <div class="health-info">
+                                <span class="health-component">Grid Connection</span>
+                                <span class="health-status online">Connected</span>
+                                <span class="health-performance">99.94% uptime</span>
+                            </div>
+                        </div>
+                        
+                        <div class="health-item">
+                            <div class="health-icon">
+                                <i class="fas fa-microchip icon-accent-secondary"></i>
+                            </div>
+                            <div class="health-info">
+                                <span class="health-component">Inverter</span>
+                                <span class="health-status online">Operational</span>
+                                <span class="health-performance">47°C temperature</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Diagnostic Tools -->
+                <div class="diagnostic-tools">
+                    <h3>Diagnostic Tools</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <i class="fas fa-search icon-accent-primary"></i>
+                                <span>System Scan</span>
+                            </div>
+                            <p>Perform a comprehensive scan of all system components</p>
+                            <button class="btn-primary" onclick="runSystemScan()">
+                                <i class="fas fa-play"></i>
+                                Run Scan
+                            </button>
+                        </div>
+                        
+                        <div class="tool-card">
+                             <div class="tool-header">
+                                 <i class="fas fa-chart-line icon-battery-color"></i>
+                                 <span>Performance Test</span>
+                             </div>
+                            <p>Test system performance and identify bottlenecks</p>
+                            <button class="btn-primary" onclick="runPerformanceTest()">
+                                <i class="fas fa-play"></i>
+                                Run Test
+                            </button>
+                        </div>
+                        
+                        <div class="tool-card">
+                             <div class="tool-header">
+                                 <i class="fas fa-network-wired icon-grid-color"></i>
+                                 <span>Connection Test</span>
+                             </div>
+                            <p>Verify all network and device connections</p>
+                            <button class="btn-primary" onclick="runConnectionTest()">
+                                <i class="fas fa-play"></i>
+                                Run Test
+                            </button>
+                        </div>
+                        
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <i class="fas fa-cogs icon-accent-primary"></i>
+                                <span>Calibration</span>
+                            </div>
+                            <p>Recalibrate sensors and measurement systems</p>
+                            <button class="btn-primary" onclick="runCalibration()">
+                                <i class="fas fa-play"></i>
+                                Calibrate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Maintenance Schedule -->
+                <div class="maintenance-schedule">
+                    <h3>Maintenance Schedule</h3>
+                    <div class="maintenance-items">
+                        <div class="maintenance-item upcoming">
+                             <div class="maintenance-info">
+                                 <i class="fas fa-brush icon-solar-color"></i>
+                                 <div>
+                                     <span class="maintenance-task">Panel Cleaning</span>
+                                     <span class="maintenance-date">Due in 15 days</span>
+                                 </div>
+                             </div>
+                            <div class="maintenance-status">
+                                <span class="status-badge upcoming">Upcoming</span>
+                            </div>
+                        </div>
+                        
+                        <div class="maintenance-item overdue">
+                             <div class="maintenance-info">
+                                 <i class="fas fa-tools icon-accent-tertiary"></i>
+                                 <div>
+                                     <span class="maintenance-task">Inverter Inspection</span>
+                                     <span class="maintenance-date">Overdue by 5 days</span>
+                                 </div>
+                             </div>
+                            <div class="maintenance-status">
+                                <span class="status-badge overdue">Overdue</span>
+                            </div>
+                        </div>
+                        
+                        <div class="maintenance-item completed">
+                             <div class="maintenance-info">
+                                 <i class="fas fa-battery-full icon-battery-color"></i>
+                                 <div>
+                                     <span class="maintenance-task">Battery Health Check</span>
+                                     <span class="maintenance-date">Completed 2 weeks ago</span>
+                                 </div>
+                             </div>
+                            <div class="maintenance-status">
+                                <span class="status-badge completed">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" onclick="scheduleMainenance()">
+                        <i class="fas fa-calendar-plus"></i>
+                        Schedule Maintenance
+                    </button>
+                </div>
+                
+                <!-- System Logs -->
+                <div class="system-logs">
+                    <h3>Recent System Events</h3>
+                    <div class="logs-container" id="system-logs">
+                        <!-- Logs will be populated by JavaScript -->
+                    </div>
+                    <button class="btn-secondary" onclick="viewFullLogs()">
+                        <i class="fas fa-list"></i>
+                        View Full Logs
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="exportDiagnostics()">
+                    <i class="fas fa-download"></i>
+                    Export Diagnostics
+                </button>
+                <button type="button" class="btn-secondary" onclick="contactSupport()">
+                    <i class="fas fa-headset"></i>
+                    Contact Support
+                </button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+
+<style>
+.settings-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.settings-nav {
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 5px;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+    padding: 5px;
+    min-width: -webkit-fill-available;
+    /* min-width: fit-content; (omitted for Samsung Internet compatibility) */
+}
+
+.nav-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-size: 0.9rem;
+}
+
+.nav-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.nav-tab.active {
+    background: var(--accent-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+}
+
+.nav-tab i {
+    font-size: 1rem;
+}
+
+.settings-section {
+    display: none;
+}
+
+.settings-section.active {
+    display: block;
+}
+
+.settings-panel {
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.panel-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.panel-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.panel-header p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-input,
+.config-input,
+.config-select,
+.preference-select {
+    padding: 12px 16px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.form-input:focus,
+.config-input:focus,
+.config-select:focus,
+.preference-select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px var(--hologram-glow);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.field-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.form-divider {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.form-divider::before,
+.form-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--glass-border);
+}
+
+.form-divider span {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.password-strength {
+    height: 4px;
+    background: var(--glass-border);
+    border-radius: 2px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.password-strength.weak::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 33%;
+    background: #ef4444;
+}
+
+.password-strength.medium::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 66%;
+    background: var(--accent-tertiary);
+}
+
+.password-strength.strong::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--battery-color);
+}
+
+.system-config {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.config-section {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.config-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.config-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.config-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.preferences-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.preference-group {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.preference-group h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.preference-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.preference-item:last-child {
+    border-bottom: none;
+}
+
+.preference-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.preference-description {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 5px;
+}
+
+.theme-selector {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.theme-option.active {
+    border-color: var(--accent-primary);
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.theme-preview {
+    width: 60px;
+    height: 40px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.dark-preview {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.light-preview {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.theme-check {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: var(--accent-primary);
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.theme-option.active .theme-check {
+    opacity: 1;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--glass-border);
+    border-radius: 24px;
+    transition: 0.3s;
+}
+
+.toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+input:checked + .toggle-label {
+    background: var(--accent-primary);
+}
+
+input:checked + .toggle-label:before {
+    transform: translateX(26px);
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--glass-border);
+    border-radius: 24px;
+    transition: 0.3s;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.notifications-config {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.notification-group {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.notification-group h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.notification-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.notification-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.notification-info i {
+    font-size: 1.2rem;
+}
+
+.notification-title {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+
+.notification-desc {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.delivery-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.delivery-method {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.method-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.method-header i {
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.method-config {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.data-management {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.data-group {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.data-group h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.export-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.export-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.export-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.export-info i {
+    font-size: 1.5rem;
+}
+
+.export-title {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+
+.export-desc {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.retention-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.retention-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.retention-item:last-child {
+    border-bottom: none;
+}
+
+.retention-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.privacy-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.privacy-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.privacy-info {
+    flex: 1;
+}
+
+.privacy-title {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+
+.privacy-desc {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.security-config {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.security-group {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.security-group h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.security-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.status-indicator.inactive {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+.status-indicator.active {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--battery-color);
+    border: 1px solid var(--battery-color);
+}
+
+.security-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.api-keys {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.api-key-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.api-info {
+    flex: 1;
+}
+
+.api-name {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.api-key {
+    display: block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 3px;
+}
+
+.api-created {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.api-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.active-sessions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.session-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.session-item.current {
+    border-color: var(--battery-color);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.session-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.session-icon {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+}
+
+.session-device {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+
+.session-location {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+}
+
+.session-time {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.session-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.current-badge {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--battery-color);
+    border: 1px solid var(--battery-color);
+}
+
+.recovery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.recovery-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.recovery-item:last-child {
+    border-bottom: none;
+}
+
+.recovery-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.recovery-value {
+    color: var(--text-secondary);
+    margin-right: 15px;
+}
+
+.diagnostics-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.health-overview {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.health-overview h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.health-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.health-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.health-icon i {
+    font-size: 1.5rem;
+}
+
+.health-component {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+
+.health-status {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+}
+
+.health-status.online {
+    color: var(--battery-color);
+}
+
+.health-status.warning {
+    color: var(--accent-tertiary);
+}
+
+.health-status.error {
+    color: #ef4444;
+}
+
+.health-performance {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.diagnostic-tools {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.diagnostic-tools h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.tool-card {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.tool-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.tool-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.tool-header i {
+    font-size: 1.2rem;
+}
+
+.tool-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.maintenance-schedule {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.maintenance-schedule h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.maintenance-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.maintenance-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.maintenance-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.maintenance-info i {
+    font-size: 1.2rem;
+}
+
+.maintenance-task {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+
+.maintenance-date {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-badge.upcoming {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+}
+
+.status-badge.overdue {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+.status-badge.completed {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--battery-color);
+    border: 1px solid var(--battery-color);
+}
+
+.system-logs {
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.system-logs h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.logs-container {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+    margin-top: 20px;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-small,
+.btn-danger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px var(--hologram-glow);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--glass-bg);
+    border-color: var(--accent-primary);
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+}
+
+.btn-small:hover {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+
+.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.3);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+    
+    .nav-tab {
+        flex-shrink: 0;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .preferences-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .health-grid,
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .theme-selector {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-container {
+        padding: 15px;
+    }
+    
+    .settings-panel {
+        padding: 20px;
+    }
+    
+    .nav-tab {
+        padding: 10px 15px;
+    }
+    
+    .nav-tab span {
+        display: none;
+    }
+}
+</style>
+
+<script>
+function initializeSettingsPage() {
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.nav-tab');
+    const sections = document.querySelectorAll('.settings-section');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const targetTab = this.dataset.tab;
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding section
+            sections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === targetTab + '-settings') {
+                    section.classList.add('active');
+                }
+            });
+            
+            // Animate tab transition
+             this.classList.add('tab-click');
+             setTimeout(() => {
+                 this.classList.remove('tab-click');
+             }, 100);
+        });
+    });
+
+    // Load persisted UI preferences (background animation + particle quality)
+    try {
+        const bg = localStorage.getItem('lv.backgroundAnimation');
+        const q = localStorage.getItem('lv.particlesQuality');
+        const bgEl = document.getElementById('background-animation');
+        const qEl = document.getElementById('particle-quality');
+        if (bgEl && (bg === 'on' || bg === 'off')) bgEl.checked = (bg !== 'off');
+        if (qEl && q) qEl.value = q;
+    } catch (e) {}
+}
+
+function setupPasswordStrength() {
+    const passwordInput = document.getElementById('new-password');
+    const strengthIndicator = document.getElementById('password-strength');
+    
+    if (passwordInput && strengthIndicator) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const strength = calculatePasswordStrength(password);
+            
+            strengthIndicator.className = 'password-strength ' + strength;
+        });
+    }
+}
+
+function calculatePasswordStrength(password) {
+    if (password.length < 6) return 'weak';
+    if (password.length < 10) return 'medium';
+    if (password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)) {
+        return 'strong';
+    }
+    return 'medium';
+}
+
+function setupThemeSelector() {
+    const themeOptions = document.querySelectorAll('.theme-option');
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    
+    // Set initial active theme
+    themeOptions.forEach(option => {
+        if (option.dataset.theme === currentTheme) {
+            option.classList.add('active');
+        }
+        
+        option.addEventListener('click', function() {
+            const selectedTheme = this.dataset.theme;
+            
+            // Update active state
+            themeOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Apply theme
+            if (window.themeManager) {
+                window.themeManager.setTheme(selectedTheme);
+            }
+        });
+    });
+}
+
+function loadSystemLogs() {
+    const logsContainer = document.getElementById('system-logs');
+    if (!logsContainer) return;
+    
+    const logs = [
+        '[2025-08-30 14:32:15] INFO: Solar inverter connection established',
+        '[2025-08-30 14:31:58] INFO: Battery health check completed - 98.5% capacity',
+        '[2025-08-30 14:30:42] INFO: Grid synchronization successful',
+        '[2025-08-30 14:29:33] WARN: Minor voltage fluctuation detected - auto-corrected',
+        '[2025-08-30 14:28:11] INFO: System startup sequence completed',
+        '[2025-08-30 14:27:45] INFO: All sensors calibrated and operational'
+    ];
+    
+    logsContainer.innerHTML = logs.join('\n');
+}
+
+// Settings update functions
+function updateProfile() {
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const currentPassword = document.getElementById('current-password').value;
+    const newPassword = document.getElementById('new-password').value;
+    
+    // Validate inputs
+    if (!username || !email) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+    
+    // Simulate profile update
+    alert('Profile updated successfully!');
+    
+    // In production, this would make an API call to update the profile
+    // fetch('/api/profile', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ username, email, currentPassword, newPassword })
+    // });
+}
+
+function updateSystemConfig() {
+    // Collect all system configuration values
+    const config = {
+        panelCapacity: document.getElementById('panel-capacity').value,
+        panelCount: document.getElementById('panel-count').value,
+        panelEfficiency: document.getElementById('panel-efficiency').value,
+        batteryCapacity: document.getElementById('battery-capacity').value,
+        utilityProvider: document.getElementById('utility-provider').value,
+        ratePlan: document.getElementById('rate-plan').value
+    };
+    
+    alert('System configuration saved successfully!');
+    console.log('System config:', config);
+}
+
+function runSystemCalibration() {
+    alert('Starting system calibration... This process will take approximately 5 minutes. You will be notified when complete.');
+    
+    // Simulate calibration process
+    setTimeout(() => {
+        alert('System calibration completed successfully! All sensors are now properly calibrated.');
+    }, 3000);
+}
+
+function updatePreferences() {
+    const backgroundAnimationEl = document.getElementById('background-animation');
+    const qualityEl = document.getElementById('particle-quality');
+
+    const backgroundAnimation = backgroundAnimationEl ? backgroundAnimationEl.checked : true;
+    const quality = qualityEl ? qualityEl.value : 'medium';
+
+    // Persist to localStorage for Three.js background to pick up
+    try {
+        localStorage.setItem('lv.backgroundAnimation', backgroundAnimation ? 'on' : 'off');
+        localStorage.setItem('lv.particlesQuality', quality);
+    } catch (e) {
+        // no-op
+    }
+
+    alert('Preferences saved successfully!');
+
+    // Reload to apply background quality/animation settings cleanly
+    setTimeout(() => {
+        window.location.reload();
+    }, 300);
+}
+
+function resetToDefaults() {
+    if (confirm('Are you sure you want to reset all preferences to their default values?')) {
+        // Reset form values to defaults
+        document.getElementById('background-animation').checked = true;
+        document.getElementById('holographic-effects').checked = true;
+        
+        alert('Preferences reset to default values.');
+    }
+}
+
+function updateNotifications() {
+    alert('Notification preferences saved successfully!');
+}
+
+function testNotifications() {
+    alert('Test notification sent! Check your configured notification channels.');
+}
+
+function updateDataSettings() {
+    alert('Data management settings saved successfully!');
+}
+
+function exportAllData() {
+    // Create a sample CSV export
+    const csvData = `Timestamp,Solar Production (kW),Home Consumption (kW),Grid Import (kW),Grid Export (kW),Battery Level (%)
+2025-08-30T00:00:00Z,0.0,2.1,2.1,0.0,65
+2025-08-30T06:00:00Z,1.2,3.8,2.6,0.0,62
+2025-08-30T12:00:00Z,8.5,4.1,0.0,4.4,75
+2025-08-30T18:00:00Z,2.1,5.2,3.1,0.0,72`;
+    
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'lunar_vault_complete_data.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+function generateMonthlyReport() {
+    alert('Generating monthly energy report... The PDF will be downloaded shortly.');
+    
+    // In production, this would generate and download a PDF
+    setTimeout(() => {
+        alert('Monthly report generated and downloaded successfully!');
+    }, 2000);
+}
+
+function deleteAllData() {
+    if (confirm('WARNING: This will permanently delete ALL your energy data. This action cannot be undone. Are you absolutely sure?')) {
+        if (confirm('This is your final warning. All data will be lost forever. Continue?')) {
+            alert('All data has been permanently deleted.');
+        }
+    }
+}
+
+function updateSecuritySettings() {
+    alert('Security settings updated successfully!');
+}
+
+function setup2FA() {
+    alert('Two-Factor Authentication setup wizard would be launched here. This would typically involve scanning a QR code with an authenticator app.');
+}
+
+function regenerateKey(keyType) {
+    if (confirm(`Are you sure you want to regenerate the ${keyType} API key? The old key will be immediately invalidated.`)) {
+        alert(`New ${keyType} API key generated successfully!`);
+    }
+}
+
+function revokeKey(keyType) {
+    if (confirm(`Are you sure you want to revoke the ${keyType} API key? This action cannot be undone.`)) {
+        alert(`${keyType} API key has been revoked.`);
+    }
+}
+
+function generateNewKey() {
+    const keyName = prompt('Enter a name for the new API key:');
+    if (keyName) {
+        alert(`New API key "${keyName}" generated successfully!`);
+    }
+}
+
+function terminateSession(sessionType) {
+    if (confirm(`Are you sure you want to terminate the ${sessionType} session?`)) {
+        alert(`${sessionType} session terminated successfully.`);
+    }
+}
+
+function terminateAllSessions() {
+    if (confirm('Are you sure you want to terminate all other sessions? You will remain logged in on this device.')) {
+        alert('All other sessions have been terminated.');
+    }
+}
+
+function updateRecoveryEmail() {
+    const newEmail = prompt('Enter new recovery email address:');
+    if (newEmail) {
+        alert(`Recovery email updated to: ${newEmail}`);
+    }
+}
+
+function generateRecoveryCodes() {
+    alert('Recovery codes generated! Please save these codes in a secure location. They can be used to recover your account if you lose access to your authentication device.');
+}
+
+// Diagnostic functions
+function runSystemScan() {
+    alert('Starting comprehensive system scan... This will check all components and connections.');
+    
+    setTimeout(() => {
+        alert('System scan completed! No issues detected. All components are functioning normally.');
+    }, 3000);
+}
+
+function runPerformanceTest() {
+    alert('Starting performance test... Analyzing system efficiency and identifying optimization opportunities.');
+    
+    setTimeout(() => {
+        alert('Performance test completed! System is operating at 97.2% efficiency. 2 optimization recommendations available.');
+    }, 4000);
+}
+
+function runConnectionTest() {
+    alert('Testing all network and device connections...');
+    
+    setTimeout(() => {
+        alert('Connection test completed! All devices are properly connected and communicating.');
+    }, 2000);
+}
+
+function runCalibration() {
+    if (confirm('System calibration will temporarily interrupt monitoring for 5-10 minutes. Continue?')) {
+        alert('Calibration started... You will be notified when complete.');
+        
+        setTimeout(() => {
+            alert('Calibration completed successfully! All sensors have been recalibrated.');
+        }, 5000);
+    }
+}
+
+function scheduleMainenance() {
+    alert('Maintenance scheduling interface would be displayed here, allowing you to book appointments with certified technicians.');
+}
+
+function viewFullLogs() {
+    alert('Full system logs viewer would be opened in a new window, displaying detailed system activity history.');
+}
+
+function exportDiagnostics() {
+    alert('Exporting diagnostic data... This file can be shared with technical support for analysis.');
+    
+    const diagnosticData = 'Lunar Vault Diagnostic Report\nGenerated: ' + new Date().toISOString() + '\n\nSystem Status: All components operational\nLast Maintenance: 2 weeks ago\nTotal Runtime: 1,247 hours';
+    
+    const blob = new Blob([diagnosticData], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'lunar_vault_diagnostics.txt';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+function contactSupport() {
+    alert('Opening support center... You would be connected with a technical support specialist.');
+}
+
+function saveAllSettings() {
+    alert('Saving all settings across all categories... Please wait.');
+    
+    setTimeout(() => {
+        alert('All settings have been saved successfully!');
+    }, 1500);
+}
+</script>
+{% endblock %}

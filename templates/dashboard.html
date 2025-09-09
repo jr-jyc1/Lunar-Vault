@@ -1,0 +1,137 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Lunar Vault{% endblock %}
+
+{% block content %}
+<div class="dashboard-modern-wrapper mx-auto max-w-7xl px-4 py-8 flex flex-col gap-8">
+    <!-- Top KPI Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <!-- Solar Production -->
+        <div class="card glass-panel modern-card kpi-card">
+            <div class="card-header flex items-center gap-2 pb-2">
+            <i class="fas fa-sun animate-glow icon-orange icon-lg"></i>
+                <div>
+                    <div class="card-title text-3xl font-bold tabular-nums" id="solar-value">0.0 kW</div>
+                    <div class="card-description text-sm">Today's Solar Production</div>
+                </div>
+                <span class="indicator animate-indicatorPulse"></span>
+            </div>
+            <div class="card-content">
+                <canvas id="solar-daily-chart" class="modern-chart"></canvas>
+            </div>
+            <div class="card-footer flex items-center gap-2 pt-2">
+                <span class="font-medium" id="solar-total">0.0 kWh</span>
+                <span class="text-xs text-muted-foreground">Total</span>
+            </div>
+        </div>
+        <!-- Home Consumption -->
+        <div class="card glass-panel modern-card kpi-card">
+            <div class="card-header flex items-center gap-2 pb-2">
+            <i class="fas fa-home animate-float-3d icon-orange icon-lg"></i>
+                <div>
+                    <div class="card-title text-3xl font-bold tabular-nums" id="home-value">0.0 kW</div>
+                    <div class="card-description text-sm">Current Home Consumption</div>
+                </div>
+                <span class="indicator animate-indicatorPulse"></span>
+            </div>
+            <div class="card-content">
+                <canvas id="home-consumption-chart" class="modern-chart"></canvas>
+            </div>
+            <div class="card-footer flex items-center gap-2 pt-2">
+                <span class="font-medium" id="home-peak">0.0 kW</span>
+                <span class="text-xs text-muted-foreground">Peak</span>
+            </div>
+        </div>
+        <!-- Battery Status -->
+        <div class="card glass-panel modern-card kpi-card">
+            <div class="card-header flex items-center gap-2 pb-2">
+            <i class="fas fa-battery-full animate-pulse-3d icon-orange icon-lg"></i>
+                <div>
+                    <div class="card-title text-3xl font-bold tabular-nums" id="battery-value">50%</div>
+                    <div class="card-description text-sm">Battery Status</div>
+                </div>
+                <span class="indicator animate-indicatorPulse"></span>
+            </div>
+            <div class="card-content">
+                <canvas id="battery-status-chart" class="modern-chart"></canvas>
+            </div>
+            <div class="card-footer flex items-center gap-2 pt-2">
+                <span class="text-xs text-muted-foreground">Efficiency</span>
+            </div>
+        </div>
+        <!-- Grid Activity -->
+        <div class="card glass-panel modern-card kpi-card">
+            <div class="card-header flex items-center gap-2 pb-2">
+            <i class="fas fa-network-wired animate-rotate-3d icon-orange icon-lg"></i>
+                <div>
+                    <div class="card-title text-3xl font-bold tabular-nums" id="grid-net">0.0 kW</div>
+                    <div class="card-description text-sm">Grid Activity</div>
+                </div>
+                <span class="indicator animate-indicatorPulse"></span>
+            </div>
+            <div class="card-content">
+                <canvas id="grid-activity-chart" class="modern-chart"></canvas>
+            </div>
+            <div class="card-footer flex items-center gap-2 pt-2">
+                <span class="font-medium" id="grid-import">0.0 kW</span>
+                <span class="text-xs text-muted-foreground">Import</span>
+                <span class="font-medium" id="grid-export">0.0 kW</span>
+                <span class="text-xs text-muted-foreground">Export</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Charts Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+        <!-- Energy Radial Chart -->
+        <div class="card glass-panel modern-card">
+            <div class="card-header flex items-center gap-2 pb-2">
+            <i class="fas fa-circle-notch animate-rotate-3d icon-orange icon-lg"></i>
+                <div class="card-title text-xl font-bold">Energy Radial</div>
+            </div>
+            <div class="card-content flex flex-col items-center">
+                <canvas id="energy-radial-chart" class="modern-chart-large"></canvas>
+                <div class="flex gap-4 mt-4">
+                    <div class="text-center">
+                        <div class="text-xs text-muted-foreground">Solar</div>
+                        <div class="font-bold" id="solar-daily">0.0/5.0 kWh</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-muted-foreground">Consumption</div>
+                        <div class="font-bold" id="consumption-daily">0.0/8.0 kWh</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-muted-foreground">Battery</div>
+                        <div class="font-bold" id="battery-daily">50/100 %</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Active Energy Chart -->
+        <div class="card glass-panel modern-card">
+            <div class="card-header flex items-center gap-2 pb-2">
+            <i class="fas fa-bolt animate-pulse-3d icon-orange icon-lg"></i>
+                <div class="card-title text-xl font-bold">Active Energy</div>
+            </div>
+            <div class="card-content flex flex-col items-center">
+                <canvas id="active-energy-chart" class="modern-chart"></canvas>
+                <div class="font-bold mt-2" id="total-energy">0.0 kWh</div>
+                <div class="text-xs text-muted-foreground">Total energy generated today</div>
+            </div>
+        </div>
+        <!-- System Uptime Chart -->
+        <div class="card glass-panel modern-card">
+            <div class="card-header flex items-center gap-2 pb-2">
+            <i class="fas fa-clock animate-rotate-3d icon-orange icon-lg"></i>
+                <div class="card-title text-xl font-bold">System Uptime</div>
+            </div>
+            <div class="card-content flex flex-col items-center">
+                <canvas id="uptime-chart" class="modern-chart"></canvas>
+                <div class="font-bold mt-2" id="system-uptime">8h 35m</div>
+                <div class="text-xs text-muted-foreground">Uptime today</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

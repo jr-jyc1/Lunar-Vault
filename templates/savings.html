@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Savings Analytics - Lunar Vault{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Simple Header -->
+    <div class="page-header">
+        <button onclick="history.back()" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back
+        </button>
+        <h1 class="page-title">Savings</h1>
+    </div>
+
+    <!-- Main Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value" id="today-savings">$12.50</div>
+            <div class="stat-label">Today</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="month-savings">$387.20</div>
+            <div class="stat-label">This Month</div>
+        </div>
+    </div>
+
+    <!-- Simple Chart -->
+    <div class="chart-section">
+        <div class="chart-card">
+            <h2 class="chart-title">Savings Trend</h2>
+            <div class="chart-container">
+                <canvas id="savings-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.analytics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-5px);
+}
+
+.page-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, var(--accent-tertiary), var(--accent-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.summary-section {
+    margin: 40px 0;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.summary-item {
+    text-align: center;
+    padding: 20px;
+}
+
+.summary-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-tertiary);
+    margin-bottom: 5px;
+}
+
+.summary-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.chart-container {
+    padding: 24px;
+    height: 400px;
+}
+
+.chart-canvas-container {
+    position: relative;
+    height: 350px;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize savings chart
+    const ctx = document.getElementById('savings-chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Monthly Savings ($)',
+                data: [420, 380, 450, 520, 480, 387],
+                backgroundColor: 'rgba(96, 165, 250, 0.6)',
+                borderColor: 'var(--accent-tertiary)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
