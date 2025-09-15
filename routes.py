@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, socketio
-from models import User, EnergyData
+from models import User, EnergyData, DeviceCommandLog
 from energy_simulator import EnergySimulator
 import json
 import logging
@@ -97,6 +97,18 @@ def savings():
 def settings():
     return render_template('settings.html', user=current_user)
 
+@app.route('/update_settings', methods=['POST'])
+@login_required
+def update_settings():
+    # Update AI automation setting
+    ai_automation_enabled = request.form.get('ai_automation') == 'on'
+    current_user.ai_automation_enabled = ai_automation_enabled
+
+    db.session.commit()
+
+    flash('Settings updated successfully!', 'success')
+    return redirect(url_for('settings'))
+
 @app.route('/api/energy/current')
 @login_required
 def get_current_energy():
@@ -121,6 +133,40 @@ def get_weather_forecast():
 def get_recommendations():
     recommendations = energy_sim.get_smart_recommendations()
     return jsonify(recommendations)
+
+@app.route('/api/action_history')
+@login_required
+def get_action_history():
+    logs = DeviceCommandLog.query.filter_by(user_id=current_user.id).order_by(DeviceCommandLog.timestamp.desc()).limit(10).all()
+    history = [
+        {
+            'timestamp': log.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'command': log.command_sent,
+            'status': log.status
+        } for log in logs
+    ]
+    return jsonify(history)
+
+@app.route('/api/action', methods=['POST'])
+@login_required
+def execute_action():
+    command = request.json.get('command')
+    if not command:
+        return jsonify({'success': False, 'message': 'No command provided'}), 400
+
+    if current_user.ai_automation_enabled:
+        # Simulate command execution
+        log = DeviceCommandLog(
+            user_id=current_user.id,
+            command_sent=command,
+            status='SUCCESS',
+            response_details='Command executed successfully (simulated).'
+        )
+        db.session.add(log)
+        db.session.commit()
+        return jsonify({'success': True, 'message': f'Command "{command}" executed and logged.'})
+    else:
+        return jsonify({'success': False, 'message': 'AI automation is not enabled.'})
 
 @app.route('/api/theme', methods=['POST'])
 @login_required

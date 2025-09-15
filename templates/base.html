@@ -38,7 +38,7 @@
     
     {% block head %}{% endblock %}
 </head>
-<body>
+<body data-ai-automation-enabled="{{ 'true' if current_user.is_authenticated and current_user.ai_automation_enabled else 'false' }}">
 <!-- Top App Bar -->
 <header class="topbar">
   <div class="brand">

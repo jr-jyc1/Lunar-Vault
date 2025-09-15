@@ -2,6 +2,7 @@ import numpy as np
 import random
 from datetime import datetime, timedelta
 import math
+import json
 
 class EnergySimulator:
     def __init__(self):
@@ -139,30 +140,81 @@ class EnergySimulator:
         
         return forecast
     
-    def get_smart_recommendations(self):
-        """Generate smart energy recommendations"""
-        recommendations = [
+    def get_ai_recommendation(self, energy_data):
+        """Simulate a call to an AI model to get a recommendation."""
+
+        prompt_template = """
+You are an expert AI assistant for solar energy homeowners. Your goal is to optimize energy usage. Based on the following real-time data, provide a user-friendly recommendation and a specific, predefined action command.
+
+Your response MUST be a valid JSON object with two keys:
+1.  "recommendation": A friendly string for the user (under 250 characters).
+2.  "command": One of the following predefined strings: ['NONE', 'SWITCH_TO_BATTERY', 'STOP_DISCHARGE', 'MAXIMIZE_EXPORT_TO_GRID'].
+
+Data:
+{
+  "location": {
+    "city": "Hyderabad, Sindh"
+  },
+  "weather_forecast": {
+    "current_condition": "Clear Sky",
+    "forecast_next_4_hours": "Sunny, High Solar Irradiance"
+  },
+  "solar_system": {
+    "live_power_generation_kw": %(solar_production)s,
+    "battery_charge_percent": %(battery_level)s,
+    "grid_status": "%(grid_status)s"
+  }
+}
+
+Analyze the data and return the JSON.
+"""
+
+        grid_status = "Exporting to Grid" if energy_data['grid_export'] > 0 else "Importing from Grid"
+
+        prompt = prompt_template % {
+            'solar_production': energy_data['solar_production'],
+            'battery_level': energy_data['battery_level'],
+            'grid_status': grid_status
+        }
+
+        # Simulate AI response
+        possible_responses = [
             {
-                'type': 'solar_optimization',
-                'title': 'Optimal Solar Window',
-                'message': 'Peak solar production expected between 11 AM - 3 PM. Schedule high-energy tasks during this window.',
-                'priority': 'high',
-                'icon': 'sun'
+              "recommendation": "The sun is shining and you're already exporting to the grid. It's a perfect time to charge your battery to full.",
+              "command": "MAXIMIZE_EXPORT_TO_GRID"
             },
             {
-                'type': 'battery_management',
-                'title': 'Battery Optimization',
-                'message': 'Your battery is at optimal charge level. Consider scheduling EV charging for tonight.',
-                'priority': 'medium',
-                'icon': 'battery'
+              "recommendation": "It's peak time and grid prices are high. Switch to battery power to save money.",
+              "command": "SWITCH_TO_BATTERY"
             },
             {
-                'type': 'cost_savings',
-                'title': 'Grid Export Opportunity',
-                'message': 'Grid rates are high today. Your excess solar could earn $2.40 in exports.',
-                'priority': 'low',
-                'icon': 'dollar-sign'
+              "recommendation": "Your battery is getting low. Let's stop discharging for now and use the grid.",
+              "command": "STOP_DISCHARGE"
+            },
+            {
+              "recommendation": "Everything looks good. No action needed at the moment.",
+              "command": "NONE"
             }
         ]
         
-        return recommendations
+        return random.choice(possible_responses)
+
+    def get_smart_recommendations(self):
+        """Generate smart energy recommendations by calling the AI simulation"""
+        current_data = self.get_current_data()
+        ai_response = self.get_ai_recommendation(current_data)
+
+        # The new format is a single JSON object, so we wrap it in a list
+        # to maintain compatibility with the original structure if needed,
+        # or we can adapt the frontend to handle a single object.
+        # For now, returning a list with one item.
+        return [
+            {
+                'type': 'ai_recommendation',
+                'title': 'AI Smart Suggestion',
+                'message': ai_response['recommendation'],
+                'command': ai_response['command'],
+                'priority': 'high',
+                'icon': 'robot'
+            }
+        ]

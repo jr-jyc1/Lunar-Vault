@@ -5,6 +5,12 @@
 
 {% block content %}
 <div class="dashboard-modern-wrapper mx-auto max-w-7xl px-4 py-8 flex flex-col gap-8">
+    {% if current_user.ai_automation_enabled %}
+    <div class="ai-status-indicator">
+        <i class="fas fa-robot"></i>
+        <span>AI Control: Active</span>
+    </div>
+    {% endif %}
     <!-- Top KPI Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <!-- Solar Production -->
@@ -84,6 +90,18 @@
 
     <!-- Modern Charts Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+        <!-- Action History -->
+        <div class="card glass-panel modern-card">
+            <div class="card-header flex items-center gap-2 pb-2">
+                <i class="fas fa-history icon-orange icon-lg"></i>
+                <div class="card-title text-xl font-bold">Action History</div>
+            </div>
+            <div class="card-content">
+                <ul id="action-history-list" class="action-history-list">
+                    <!-- Action history will be populated by JavaScript -->
+                </ul>
+            </div>
+        </div>
         <!-- Energy Radial Chart -->
         <div class="card glass-panel modern-card">
             <div class="card-header flex items-center gap-2 pb-2">

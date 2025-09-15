@@ -416,6 +416,9 @@ class LunarVault {
             const recResponse = await fetch('/api/recommendations');
             const recommendations = await recResponse.json();
             this.updateRecommendations(recommendations);
+
+            // Load action history
+            this.loadActionHistory();
             
             // Load weather forecast
             const weatherResponse = await fetch('/api/weather/forecast');
@@ -427,20 +430,6 @@ class LunarVault {
         }
     }
     
-    updateRecommendations(recommendations) {
-        const container = document.getElementById('recommendations-container');
-        if (!container) return;
-        
-        container.innerHTML = recommendations.map(rec => `
-            <div class="recommendation-card glass-panel">
-                <div class="recommendation-header">
-                    <i class="fas fa-${rec.icon} recommendation-icon"></i>
-                    <h4 class="recommendation-title">${rec.title}</h4>
-                </div>
-                <p class="recommendation-message">${rec.message}</p>
-            </div>
-        `).join('');
-    }
     
     updateWeatherForecast(forecast) {
         const container = document.getElementById('weather-forecast');
@@ -513,6 +502,69 @@ class LunarVault {
         setTimeout(() => {
             ripple.remove();
         }, 600);
+    }
+
+    async loadActionHistory() {
+        try {
+            const response = await fetch('/api/action_history');
+            const history = await response.json();
+            const list = document.getElementById('action-history-list');
+            if (list) {
+                if (history.length === 0) {
+                    list.innerHTML = '<li>No recent actions.</li>';
+                    return;
+                }
+                list.innerHTML = history.map(log => `
+                    <li>
+                        <span>${log.timestamp}</span>
+                        <span>${log.command}</span>
+                        <span class="status-${log.status.toLowerCase()}">${log.status}</span>
+                    </li>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Error loading action history:', error);
+        }
+    }
+
+    updateRecommendations(recommendations) {
+        const container = document.getElementById('recommendations-container');
+        if (!container) return;
+
+        container.innerHTML = recommendations.map(rec => `
+            <div class="recommendation-card glass-panel">
+                <div class="recommendation-header">
+                    <i class="fas fa-${rec.icon} recommendation-icon"></i>
+                    <h4 class="recommendation-title">${rec.title}</h4>
+                </div>
+                <p class="recommendation-message">${rec.message}</p>
+            </div>
+        `).join('');
+
+        const isAIEnabled = document.body.dataset.aiAutomationEnabled === 'true';
+        if (isAIEnabled) {
+            recommendations.forEach(rec => {
+                if (rec.command && rec.command !== 'NONE') {
+                    this.executeAICommand(rec.command);
+                }
+            });
+        }
+    }
+
+    async executeAICommand(command) {
+        try {
+            await fetch('/api/action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ command: command })
+            });
+            // Refresh action history after executing command
+            this.loadActionHistory();
+        } catch (error) {
+            console.error('Error executing AI command:', error);
+        }
     }
 }
 

@@ -62,6 +62,7 @@
     </nav>
     
     <!-- Profile Settings -->
+    <form method="POST" action="{{ url_for('update_settings') }}">
     <section id="profile-settings" class="settings-section active">
         <div class="glass-panel settings-panel">
             <div class="panel-header">
@@ -246,10 +247,29 @@
                         </div>
                     </div>
                 </div>
+                 <!-- AI Smart Control -->
+                <div class="config-section">
+                    <h3>
+                        <i class="fas fa-robot icon-accent-primary"></i>
+                        AI Smart Control
+                    </h3>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label for="ai-automation" class="config-label">Enable AI Automation</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="ai-automation" name="ai_automation" {% if current_user.ai_automation_enabled %}checked{% endif %}>
+                                <label for="ai-automation" class="toggle-label">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="field-hint">Allow the AI to automatically manage your energy system to maximize savings.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="form-actions">
-                <button type="button" class="btn-primary" onclick="updateSystemConfig()">
+                <button type="submit" class="btn-primary">
                     <i class="fas fa-save"></i>
                     Save System Configuration
                 </button>
@@ -1087,6 +1107,7 @@
             </div>
         </div>
     </section>
+    </form>
 </div>
 
 <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
