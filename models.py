@@ -39,6 +39,7 @@ class DeviceCommandLog(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     command_sent = db.Column(db.String(100), nullable=False)
+    recommendation_text = db.Column(db.Text)
     source = db.Column(db.String(50), default='AI_AUTOMATION')
     status = db.Column(db.String(20), nullable=False)  # e.g., 'SUCCESS', 'FAILED'
     response_details = db.Column(db.Text)

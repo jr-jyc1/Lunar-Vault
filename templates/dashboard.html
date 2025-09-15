@@ -6,9 +6,9 @@
 {% block content %}
 <div class="dashboard-modern-wrapper mx-auto max-w-7xl px-4 py-8 flex flex-col gap-8">
     {% if current_user.ai_automation_enabled %}
-    <div class="ai-status-indicator">
-        <i class="fas fa-robot"></i>
-        <span>AI Control: Active</span>
+    <div class="ai-status-indicator active">
+        <i class="fas fa-magic-wand-sparkles animate-glow"></i>
+        <span><strong>AI Control: Active</strong></span>
     </div>
     {% endif %}
     <!-- Top KPI Section -->
@@ -98,7 +98,7 @@
             </div>
             <div class="card-content">
                 <ul id="action-history-list" class="action-history-list">
-                    <!-- Action history will be populated by JavaScript -->
+                    <li>Loading...</li>
                 </ul>
             </div>
         </div>

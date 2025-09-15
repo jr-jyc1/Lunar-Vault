@@ -518,6 +518,7 @@ class LunarVault {
                     <li>
                         <span>${log.timestamp}</span>
                         <span>${log.command}</span>
+                        <span>${log.recommendation_text}</span>
                         <span class="status-${log.status.toLowerCase()}">${log.status}</span>
                     </li>
                 `).join('');
@@ -545,26 +546,54 @@ class LunarVault {
         if (isAIEnabled) {
             recommendations.forEach(rec => {
                 if (rec.command && rec.command !== 'NONE') {
-                    this.executeAICommand(rec.command);
+                    this.executeAICommand(rec.command, rec.message);
                 }
             });
         }
     }
 
-    async executeAICommand(command) {
+    async executeAICommand(command, recommendation) {
         try {
-            await fetch('/api/action', {
+            const response = await fetch('/api/action', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ command: command })
+                body: JSON.stringify({ command: command, recommendation: recommendation })
             });
-            // Refresh action history after executing command
-            this.loadActionHistory();
+            const data = await response.json();
+            if (data.success) {
+                this.showToast(`AI action: ${recommendation}`);
+                // Refresh action history after executing command
+                this.loadActionHistory();
+            }
         } catch (error) {
             console.error('Error executing AI command:', error);
         }
+    }
+
+    showToast(message) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+
+        container.appendChild(toast);
+
+        // Show the toast
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        // Hide and remove the toast after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                container.removeChild(toast);
+            }, 300);
+        }, 3000);
     }
 }
 

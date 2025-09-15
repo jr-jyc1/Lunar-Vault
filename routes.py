@@ -142,7 +142,8 @@ def get_action_history():
         {
             'timestamp': log.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
             'command': log.command_sent,
-            'status': log.status
+            'status': log.status,
+            'recommendation_text': log.recommendation_text
         } for log in logs
     ]
     return jsonify(history)
@@ -151,6 +152,7 @@ def get_action_history():
 @login_required
 def execute_action():
     command = request.json.get('command')
+    recommendation = request.json.get('recommendation')
     if not command:
         return jsonify({'success': False, 'message': 'No command provided'}), 400
 
@@ -159,6 +161,7 @@ def execute_action():
         log = DeviceCommandLog(
             user_id=current_user.id,
             command_sent=command,
+            recommendation_text=recommendation,
             status='SUCCESS',
             response_details='Command executed successfully (simulated).'
         )
